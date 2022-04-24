@@ -1,13 +1,13 @@
 //#if MODERN==0 || FABRIC==1
-package com.example.template;
+package cc.woverflow.glintcolorizer;
 
 import cc.woverflow.onecore.utils.Updater;
-import com.example.template.config.TemplateConfig;
+import cc.woverflow.glintcolorizer.config.GlintConfig;
 import java.io.File;
 
 //#if MODERN==0
 import net.minecraftforge.fml.common.Mod;
-import com.example.template.command.TemplateCommand;
+import cc.woverflow.glintcolorizer.command.GlintCommand;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 //#else
@@ -15,12 +15,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 //#endif
 
 //#if MODERN==0
-@Mod(modid = ModTemplate.ID, name = ModTemplate.NAME, version = ModTemplate.VER)
+@Mod(modid = GlintColorizer.ID, name = GlintColorizer.NAME, version = GlintColorizer.VER)
 //#endif
-public class ModTemplate {
+public class GlintColorizer {
     public static final String NAME = "@NAME@", VER = "@VER@", ID = "@ID@";
     public static File modDir = new File(new File("./W-OVERFLOW"), NAME);
-    public static TemplateConfig config;
+    public static GlintConfig config;
 
     //#if MODERN==0
     @Mod.EventHandler
@@ -54,9 +54,9 @@ public class ModTemplate {
         //$$ onPreInit();
         //#endif
         //#if MODERN==0
-        new TemplateCommand().register();
+        new GlintCommand().register();
         //#endif
-        config = new TemplateConfig();
+        config = new GlintConfig();
         config.preload();
     }
 }

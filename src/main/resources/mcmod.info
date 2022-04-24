@@ -2,7 +2,7 @@
   {
     "modid": "${id}",
     "name": "${name}",
-    "description": "An example template",
+    "description": "Change the color of the enchantment glint!",
     "version": "${version}",
     "mcversion": "${mcVersionStr}",
     "url": "",

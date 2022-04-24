@@ -25,7 +25,7 @@ blossom {
 }
 
 version = mod_version
-group = "com.example"
+group = "cc.woverflow"
 base {
     archivesName.set(mod_name)
 }
@@ -61,17 +61,9 @@ dependencies {
         }
 
         runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.0.0")
-        shade("cc.woverflow:onecore-tweaker:1.4.2")
+        shade("cc.woverflow:onecore-tweaker:1.3.0")
     }
-    if (platform.isFabric) {
-        val fabricApiVersion: String by project
-        val fabricLanguageKotlinVersion: String by project
-        val modMenuVersion: String by project
-        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-        modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
-        modImplementation("com.terraformersmc:modmenu:$modMenuVersion")
-    }
-    val onecore = "cc.woverflow:onecore-${platform}:1.4.7"
+    val onecore = "cc.woverflow:onecore:1.3.4"
     if (platform.isLegacyForge) {
         compileOnly(onecore)
     } else {
@@ -83,15 +75,15 @@ dependencies {
 tasks.processResources {
     inputs.property("id", mod_id)
     inputs.property("name", mod_name)
-    val java = if (project.platform.mcMinor > 18) {
+    val java = if (project.platform.mcMinor >= 18) {
         17
-    } else {if (project.platform.mcMinor >= 17) 16 else 8 }
+    } else {if (project.platform.mcMinor == 17) 16 else 8 }
     val compatLevel = "JAVA_${java}"
     inputs.property("java", java)
     inputs.property("java_level", compatLevel)
     inputs.property("version", mod_version)
-    inputs.property("mcVersionStr", project.platform.mcVersionStr.substringBeforeLast(".") + ".x")
-    filesMatching(listOf("fabric.mod.json", "mcmod.info", "mixins.${mod_id}.json")) {
+    inputs.property("mcVersionStr", project.platform.mcVersionStr)
+    filesMatching(listOf("mcmod.info", "mixins.${mod_id}.json", "mods.toml")) {
         expand(mapOf(
             "id" to mod_id,
             "name" to mod_name,
@@ -101,30 +93,51 @@ tasks.processResources {
             "mcVersionStr" to project.platform.mcVersionStr
         ))
     }
-}
-
-tasks.remapJar {
-    archiveClassifier.set("nodeps")
-}
-
-tasks.jar {
-    manifest {
-        attributes(mapOf(
-            "ModSide" to "CLIENT",
-            "TweakOrder" to "0",
-            "TweakClass" to "cc.woverflow.onecore.tweaker.OneCoreTweaker",
-            "MixinConfigs" to "mixins.${mod_id}.json",
-            "ForceLoadAsMod" to true
+    filesMatching("fabric.mod.json") {
+        expand(mapOf(
+            "id" to mod_id,
+            "name" to mod_name,
+            "java" to java,
+            "java_level" to compatLevel,
+            "version" to mod_version,
+            "mcVersionStr" to project.platform.mcVersionStr.substringBeforeLast(".") + ".x"
         ))
     }
 }
 
 tasks {
+    withType(Jar::class.java) {
+        if (project.platform.isFabric) {
+            exclude("mcmod.info", "mods.toml")
+        } else {
+            exclude("fabric.mod.json")
+            if (project.platform.isLegacyForge) {
+                exclude("mods.toml")
+            } else {
+                exclude("mcmod.info")
+            }
+        }
+    }
     named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-        archiveClassifier.set("")
-        remapJar.orNull?.let { from(it.archiveFile) }
+        archiveClassifier.set("dev")
         configurations = listOf(shade)
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
-    assemble.orNull?.dependsOn(shadowJar)
+    remapJar {
+        input.set(shadowJar.get().archiveFile)
+        archiveClassifier.set("")
+    }
+    jar {
+        manifest {
+            attributes(mapOf(
+                "ModSide" to "CLIENT",
+                "TweakOrder" to "0",
+                "TweakClass" to "cc.woverflow.onecore.tweaker.OneCoreTweaker",
+                "ForceLoadAsMod" to true
+            ))
+        }
+        dependsOn(shadowJar)
+        archiveClassifier.set("")
+        enabled = false
+    }
 }

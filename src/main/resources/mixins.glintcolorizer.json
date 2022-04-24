@@ -1,10 +1,11 @@
 {
   "compatibilityLevel": "${java_level}",
   "minVersion": "0.7",
-  "package": "com.example.template.mixin",
+  "package": "cc.woverflow.glintcolorizer.mixin",
   "refmap": "mixins.${id}.refmap.json",
   "mixins": [
-    "MinecraftMixin"
+    "LayerArmorBaseMixin",
+    "RenderItemMixin"
   ],
   "verbose": true
 }
