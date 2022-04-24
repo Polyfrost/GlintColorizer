@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "name": "${name}",
+  "version": "${version}",
+  "description": "An example template",
+  "authors": [
+    "W-OVERFLOW"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": "",
+    "issues": ""
+  },
+  "entrypoints": {
+    "client": [
+      {
+        "value": "com.example.template.ModTemplate::onInit"
+      }
+    ],
+    "modmenu": [
+      "com.example.template.config.ExampleModMenu"
+    ]
+  },
+  "mixins": [
+    "mixins.modtemplate.json"
+  ],
+  "license": "LGPL-3.0",
+  "environment": "client",
+  "depends": {
+    "onecore": "*",
+    "minecraft": "${mcVersionStr}",
+    "java": ">=${java}"
+  }
+}
