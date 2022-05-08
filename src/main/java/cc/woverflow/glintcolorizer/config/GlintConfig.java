@@ -3,7 +3,6 @@ package cc.woverflow.glintcolorizer.config;
 
 import cc.woverflow.glintcolorizer.GlintColorizer;
 import cc.woverflow.onecore.utils.GuiUtils;
-import gg.essential.api.EssentialAPI;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;

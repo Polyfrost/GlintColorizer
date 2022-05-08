@@ -5,6 +5,7 @@
   "refmap": "mixins.${id}.refmap.json",
   "mixins": [
     "LayerArmorBaseMixin",
+    "OverflowGlintHandlerMixin",
     "RenderItemMixin"
   ],
   "verbose": true

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(LayerArmorBase.class)
+@Mixin(value = LayerArmorBase.class, priority = Integer.MIN_VALUE)
 public class LayerArmorBaseMixin {
     @ModifyArgs(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V"))
     private void modifyColor(Args args) {
