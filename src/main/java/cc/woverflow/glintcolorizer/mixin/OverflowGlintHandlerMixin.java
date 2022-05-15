@@ -18,13 +18,13 @@ public class OverflowGlintHandlerMixin {
 
     @Dynamic("OverflowAnimations")
     @ModifyConstant(method = "renderGlint", constant = @Constant(intValue = -8372020))
-    private int modifyGlint(int constant) {
+    private static int modifyGlint(int constant) {
         return GlintConfig.chroma ? ColorUtils.timeBasedChroma() : GlintConfig.color.getRGB();
     }
 
     @Dynamic("OverflowAnimations")
     @WrapWithCondition(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
-    private boolean shouldDepthFunc(int factor) {
+    private static boolean shouldDepthFunc(int factor) {
         return !RenderItemHook.isRenderingGUI || !(RenderItemHook.itemStack.getItem() instanceof ItemPotion) || !GlintConfig.potionGlint;
     }
 }
