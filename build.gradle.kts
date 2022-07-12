@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import gg.essential.gradle.util.noServerRunConfigs
 
 plugins {
@@ -6,7 +7,9 @@ plugins {
     id("gg.essential.defaults.java")
     id("gg.essential.defaults.loom")
     id("com.github.johnrengelman.shadow")
-    id("net.kyori.blossom")
+    id("net.kyori.blossom") version "1.3.0"
+    id("io.github.juuxel.loom-quiltflower-mini")
+    id("signing")
     java
 }
 
@@ -25,17 +28,16 @@ blossom {
 }
 
 version = mod_version
-group = "cc.woverflow"
+group = "cc.polyfrost"
 base {
-    archivesName.set(mod_name)
+    archivesName.set("$mod_id-$platform")
 }
-
-loom.noServerRunConfigs()
 loom {
+    noServerRunConfigs()
     if (project.platform.isLegacyForge) {
         launchConfigs.named("client") {
-            arg("--tweakClass", "cc.woverflow.onecore.tweaker.OneCoreTweaker")
-            property("onecore.mixin", "mixins.${mod_id}.json")
+            arg("--tweakClass", "cc.polyfrost.oneconfigwrapper.OneConfigWrapper")
+            property("mixin.debug.export", "true")
         }
     }
     if (project.platform.isForge) {
@@ -46,30 +48,27 @@ loom {
     mixin.defaultRefmapName.set("mixins.${mod_id}.refmap.json")
 }
 
-repositories {
-    maven("https://repo.woverflow.cc/")
-}
-
 val shade: Configuration by configurations.creating {
     configurations.implementation.get().extendsFrom(this)
 }
 
-dependencies {
-    if (platform.isLegacyForge) {
-        compileOnly ("gg.essential:essential-$platform:1933") {
-            exclude(module = "keventbus")
-        }
+sourceSets {
+    main {
+        output.setResourcesDir(java.classesDirectory)
+    }
+}
 
-        runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.0.0")
-        shade("cc.woverflow:onecore-tweaker:1.3.0")
-    }
-    val onecore = "cc.woverflow:onecore:1.3.4"
-    if (platform.isLegacyForge) {
-        compileOnly(onecore)
-    } else {
-        modImplementation(onecore)
-    }
-    compileOnly ("org.spongepowered:mixin:0.8.5-SNAPSHOT")
+repositories {
+    maven("https://repo.polyfrost.cc/releases")
+    maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+}
+
+dependencies {
+    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.1.0-alpha50")
+    shade("cc.polyfrost:oneconfig-wrapper-1.8.9-forge:1.0.0-alpha6")
+    modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.0")
+    implementation("com.github.LlamaLad7:MixinExtras:0.0.11")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.11")
 }
 
 tasks.processResources {
@@ -77,31 +76,37 @@ tasks.processResources {
     inputs.property("name", mod_name)
     val java = if (project.platform.mcMinor >= 18) {
         17
-    } else {if (project.platform.mcMinor == 17) 16 else 8 }
+    } else {
+        if (project.platform.mcMinor == 17) 16 else 8
+    }
     val compatLevel = "JAVA_${java}"
     inputs.property("java", java)
     inputs.property("java_level", compatLevel)
     inputs.property("version", mod_version)
     inputs.property("mcVersionStr", project.platform.mcVersionStr)
     filesMatching(listOf("mcmod.info", "mixins.${mod_id}.json", "mods.toml")) {
-        expand(mapOf(
-            "id" to mod_id,
-            "name" to mod_name,
-            "java" to java,
-            "java_level" to compatLevel,
-            "version" to mod_version,
-            "mcVersionStr" to project.platform.mcVersionStr
-        ))
+        expand(
+            mapOf(
+                "id" to mod_id,
+                "name" to mod_name,
+                "java" to java,
+                "java_level" to compatLevel,
+                "version" to mod_version,
+                "mcVersionStr" to project.platform.mcVersionStr
+            )
+        )
     }
     filesMatching("fabric.mod.json") {
-        expand(mapOf(
-            "id" to mod_id,
-            "name" to mod_name,
-            "java" to java,
-            "java_level" to compatLevel,
-            "version" to mod_version,
-            "mcVersionStr" to project.platform.mcVersionStr.substringBeforeLast(".") + ".x"
-        ))
+        expand(
+            mapOf(
+                "id" to mod_id,
+                "name" to mod_name,
+                "java" to java,
+                "java_level" to compatLevel,
+                "version" to mod_version,
+                "mcVersionStr" to project.platform.mcVersionStr.substringBeforeLast(".") + ".x"
+            )
+        )
     }
 }
 
@@ -118,7 +123,7 @@ tasks {
             }
         }
     }
-    named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    named<ShadowJar>("shadowJar") {
         archiveClassifier.set("dev")
         configurations = listOf(shade)
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -129,12 +134,15 @@ tasks {
     }
     jar {
         manifest {
-            attributes(mapOf(
-                "ModSide" to "CLIENT",
-                "TweakOrder" to "0",
-                "TweakClass" to "cc.woverflow.onecore.tweaker.OneCoreTweaker",
-                "ForceLoadAsMod" to true
-            ))
+            attributes(
+                mapOf(
+                    "ModSide" to "CLIENT",
+                    "ForceLoadAsMod" to true,
+                    "TweakOrder" to "0",
+                    "MixinConfigs" to "mixins.${mod_id}.json",
+                    "TweakClass" to "cc.polyfrost.oneconfigwrapper.OneConfigWrapper"
+                )
+            )
         }
         dependsOn(shadowJar)
         archiveClassifier.set("")

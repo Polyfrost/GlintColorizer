@@ -2,8 +2,7 @@ package cc.woverflow.glintcolorizer.mixin;
 
 import cc.woverflow.glintcolorizer.RenderItemHook;
 import cc.woverflow.glintcolorizer.config.GlintConfig;
-import cc.woverflow.onecore.utils.ColorUtils;
-import gg.essential.lib.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.item.ItemPotion;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +18,7 @@ public class OverflowGlintHandlerMixin {
     @Dynamic("OverflowAnimations")
     @ModifyConstant(method = "renderGlint", constant = @Constant(intValue = -8372020))
     private static int modifyGlint(int constant) {
-        return GlintConfig.chroma ? ColorUtils.timeBasedChroma() : GlintConfig.color.getRGB();
+        return GlintConfig.color.getRGB();
     }
 
     @Dynamic("OverflowAnimations")

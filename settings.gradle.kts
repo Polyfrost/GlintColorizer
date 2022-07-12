@@ -2,14 +2,19 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven("https://maven.fabricmc.net")
+        maven("https://repo.polyfrost.cc/releases")
         maven("https://maven.architectury.dev/")
-        maven("https://maven.minecraftforge.net")
-        maven("https://repo.essential.gg/repository/maven-public")
     }
     plugins {
-        val egtVersion = "0.1.4"
+        val egtVersion = "0.1.10"
         id("gg.essential.multi-version.root") version egtVersion
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "io.github.juuxel.loom-quiltflower-mini") {
+                useModule("com.github.wyvest:loom-quiltflower-mini:${requested.version}")
+            }
+        }
     }
 }
 
@@ -26,5 +31,4 @@ listOf(
         projectDir = file("versions/$version")
         buildFileName = "../../build.gradle.kts"
     }
-
 }

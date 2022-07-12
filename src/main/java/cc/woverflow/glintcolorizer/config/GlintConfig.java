@@ -1,58 +1,46 @@
 //#if MODERN==0 || FABRIC==1
 package cc.woverflow.glintcolorizer.config;
 
+import cc.polyfrost.oneconfig.config.Config;
+import cc.polyfrost.oneconfig.config.annotations.Button;
+import cc.polyfrost.oneconfig.config.annotations.Color;
+import cc.polyfrost.oneconfig.config.annotations.Switch;
+import cc.polyfrost.oneconfig.config.core.OneColor;
+import cc.polyfrost.oneconfig.config.data.Mod;
+import cc.polyfrost.oneconfig.config.data.ModType;
+import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator;
 import cc.woverflow.glintcolorizer.GlintColorizer;
-import cc.woverflow.onecore.utils.GuiUtils;
-import gg.essential.vigilance.Vigilant;
-import gg.essential.vigilance.data.Property;
-import gg.essential.vigilance.data.PropertyType;
 import net.minecraft.client.Minecraft;
 
-import java.awt.*;
 import java.io.File;
 
-public class GlintConfig extends Vigilant {
+public class GlintConfig extends Config {
 
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Enable Chroma",
-            description = "Use a chroma color instead of a static color.\nThis overwrites the other color setting.",
+    @Color(
+            name = "Enchantment Glint Color",
             category = "General"
     )
-    public static boolean chroma;
+    public static OneColor color = new OneColor(-8372020);
 
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Color",
-            description = "Change the color of the enchantment glint.",
-            category = "General"
-    )
-    public static Color color = new Color(-8372020);
-
-    @Property(
-            type = PropertyType.SWITCH,
+    @Switch(
             name = "Shiny Potions",
-            description = "Make the enchantment glint apply on the background for potions.",
             category = "General"
     )
     public static boolean potionGlint;
 
-    @Property(
-            type = PropertyType.BUTTON,
+    @Button(
             name = "Reset Color",
-            description = "Reset the color of the glint.",
-            category = "General"
+            category = "General", text = "Reset"
     )
-    public static void resetColor() {
+    Runnable reset = (() -> {
         Minecraft.getMinecraft().displayGuiScreen(null);
-        color = new Color(-8372020);
-        GlintColorizer.config.markDirty();
-        GlintColorizer.config.writeData();
-        GuiUtils.openScreen(GlintColorizer.config);
-    }
+        color = new OneColor(-8372020);
+        GlintColorizer.config.save();
+        GlintColorizer.config.openGui();
+    });
 
     public GlintConfig() {
-        super(new File(GlintColorizer.modDir, GlintColorizer.ID + ".toml"), GlintColorizer.NAME);
+        super(new Mod(GlintColorizer.NAME, ModType.UTIL_QOL, new VigilanceMigrator(new File(GlintColorizer.modDir, GlintColorizer.ID + ".toml").getPath())), GlintColorizer.ID + ".json");
         initialize();
     }
 }

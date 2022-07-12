@@ -2,24 +2,27 @@ package cc.woverflow.glintcolorizer.mixin;
 
 import cc.woverflow.glintcolorizer.RenderItemHook;
 import cc.woverflow.glintcolorizer.config.GlintConfig;
-import cc.woverflow.onecore.utils.ColorUtils;
-import gg.essential.lib.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
 public abstract class RenderItemMixin {
-    @Shadow protected abstract void renderEffect(IBakedModel model);
+    @Shadow
+    protected abstract void renderEffect(IBakedModel model);
 
     @ModifyConstant(method = "renderEffect", constant = @Constant(intValue = -8372020))
     private int modifyGlint(int constant) {
-        return GlintConfig.chroma ? ColorUtils.timeBasedChroma() : GlintConfig.color.getRGB();
+        return GlintConfig.color.getRGB();
     }
 
     @Inject(method = "renderItemIntoGUI", at = @At("HEAD"))

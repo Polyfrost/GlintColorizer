@@ -1,7 +1,7 @@
 //#if MODERN==0 || FABRIC==1
 package cc.woverflow.glintcolorizer;
 
-import cc.woverflow.onecore.utils.Updater;
+import cc.polyfrost.oneconfig.utils.commands.CommandManager;
 import cc.woverflow.glintcolorizer.config.GlintConfig;
 import java.io.File;
 
@@ -10,9 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 import cc.woverflow.glintcolorizer.command.GlintCommand;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-//#else
-//$$ import cc.woverflow.onecore.utils.Utils;
-//#endif
 
 //#if MODERN==0
 @Mod(modid = GlintColorizer.ID, name = GlintColorizer.NAME, version = GlintColorizer.VER)
@@ -30,17 +27,6 @@ public class GlintColorizer {
     //#endif
     {
         if (!modDir.exists()) modDir.mkdirs();
-        //#if FABRIC==1
-        //$$ File file = Utils.getFileOfMod(ID);
-        //$$ if (file == null) return;
-        //#endif
-        Updater.INSTANCE.addToUpdater(
-                //#if FABRIC==0
-                event.getSourceFile()
-                //#else
-                //$$ file
-                //#endif
-                , NAME, ID, VER, "W-OVERFLOW/" + ID);
     }
 
     //#if MODERN==0
@@ -54,10 +40,9 @@ public class GlintColorizer {
         //$$ onPreInit();
         //#endif
         //#if MODERN==0
-        new GlintCommand().register();
+        CommandManager.INSTANCE.registerCommand(GlintCommand.class);
         //#endif
         config = new GlintConfig();
-        config.preload();
     }
 }
 //#endif
