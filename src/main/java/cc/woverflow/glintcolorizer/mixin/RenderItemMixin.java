@@ -2,17 +2,14 @@ package cc.woverflow.glintcolorizer.mixin;
 
 import cc.woverflow.glintcolorizer.RenderItemHook;
 import cc.woverflow.glintcolorizer.config.GlintConfig;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
@@ -40,9 +37,12 @@ public abstract class RenderItemMixin {
         RenderItemHook.itemStack = stack;
     }
 
-    @WrapWithCondition(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
-    private boolean shouldDepthFunc(int factor) {
-        return !RenderItemHook.isRenderingGUI || !(RenderItemHook.itemStack.getItem() instanceof ItemPotion) || !GlintConfig.potionGlint;
+    @Redirect(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
+    private void shouldDepthFunc(int factor) {
+        if (RenderItemHook.isRenderingGUI && RenderItemHook.itemStack.getItem() instanceof ItemPotion && GlintConfig.potionGlint) {
+            return;
+        }
+        GlStateManager.depthFunc(factor);
     }
 
     @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;Lnet/minecraft/item/ItemStack;)V"))
@@ -52,8 +52,11 @@ public abstract class RenderItemMixin {
         }
     }
 
-    @WrapWithCondition(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderEffect(Lnet/minecraft/client/resources/model/IBakedModel;)V"))
-    private boolean shouldRender(RenderItem instance, IBakedModel model, ItemStack stack, IBakedModel model2) {
-        return !RenderItemHook.isRenderingGUI || !(stack.getItem() instanceof ItemPotion) || !GlintConfig.potionGlint;
+    @Redirect(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderEffect(Lnet/minecraft/client/resources/model/IBakedModel;)V"))
+    private void shouldRender(RenderItem instance, IBakedModel model, ItemStack stack, IBakedModel model2) {
+        if (RenderItemHook.isRenderingGUI && stack.getItem() instanceof ItemPotion && GlintConfig.potionGlint) {
+            return;
+        }
+        renderEffect(model);
     }
 }

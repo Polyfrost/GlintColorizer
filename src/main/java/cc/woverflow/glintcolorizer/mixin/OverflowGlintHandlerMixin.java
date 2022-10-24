@@ -2,7 +2,7 @@ package cc.woverflow.glintcolorizer.mixin;
 
 import cc.woverflow.glintcolorizer.RenderItemHook;
 import cc.woverflow.glintcolorizer.config.GlintConfig;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemPotion;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
 @Mixin(targets = "cc.woverflow.overflowanimations.GlintHandler")
@@ -22,8 +23,11 @@ public class OverflowGlintHandlerMixin {
     }
 
     @Dynamic("OverflowAnimations")
-    @WrapWithCondition(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
-    private static boolean shouldDepthFunc(int factor) {
-        return !RenderItemHook.isRenderingGUI || !(RenderItemHook.itemStack.getItem() instanceof ItemPotion) || !GlintConfig.potionGlint;
+    @Redirect(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
+    private void shouldDepthFunc(int factor) {
+        if (RenderItemHook.isRenderingGUI && RenderItemHook.itemStack.getItem() instanceof ItemPotion && GlintConfig.potionGlint) {
+            return;
+        }
+        GlStateManager.depthFunc(factor);
     }
 }

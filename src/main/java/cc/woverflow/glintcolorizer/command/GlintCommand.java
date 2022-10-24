@@ -10,7 +10,7 @@ import cc.woverflow.glintcolorizer.GlintColorizer;
 public class GlintCommand {
 
     @Main
-    public static void handle() {
+    public void handle() {
         GlintColorizer.config.openGui();
     }
 }

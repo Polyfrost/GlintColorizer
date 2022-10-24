@@ -40,7 +40,7 @@ public class GlintColorizer {
         //$$ onPreInit();
         //#endif
         //#if MODERN==0
-        CommandManager.INSTANCE.registerCommand(GlintCommand.class);
+        CommandManager.INSTANCE.registerCommand(new GlintCommand());
         //#endif
         config = new GlintConfig();
     }

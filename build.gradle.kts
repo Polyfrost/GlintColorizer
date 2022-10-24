@@ -61,14 +61,14 @@ sourceSets {
 repositories {
     maven("https://repo.polyfrost.cc/releases")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven("https://repo.spongepowered.org/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.1.0-alpha50")
+    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.1.0-alpha108")
     shade("cc.polyfrost:oneconfig-wrapper-1.8.9-forge:1.0.0-alpha6")
     modRuntimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.0")
-    implementation("com.github.LlamaLad7:MixinExtras:0.0.11")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.11")
+    compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 }
 
 tasks.processResources {
