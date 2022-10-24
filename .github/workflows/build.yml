@@ -43,7 +43,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew setupCIWorkspace build --no-daemon
+        run: ./gradlew build --no-daemon
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
