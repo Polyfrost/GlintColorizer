@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
-@Mixin(targets = "cc.woverflow.overflowanimations.GlintHandler")
+@Mixin(targets = {"cc.polyfrost.overflowanimations.handlers.GlintHandler", "cc.woverflow.overflowanimations.GlintHandler"})
 public class OverflowGlintHandlerMixin {
 
     @Dynamic("OverflowAnimations")
@@ -24,7 +24,7 @@ public class OverflowGlintHandlerMixin {
 
     @Dynamic("OverflowAnimations")
     @Redirect(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
-    private void shouldDepthFunc(int factor) {
+    private static void shouldDepthFunc(int factor) {
         if (RenderItemHook.isRenderingGUI && RenderItemHook.itemStack.getItem() instanceof ItemPotion && GlintConfig.potionGlint) {
             return;
         }
