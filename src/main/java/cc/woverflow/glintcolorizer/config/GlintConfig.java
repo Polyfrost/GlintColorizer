@@ -4,6 +4,7 @@ package cc.woverflow.glintcolorizer.config;
 import cc.polyfrost.oneconfig.config.Config;
 import cc.polyfrost.oneconfig.config.annotations.Button;
 import cc.polyfrost.oneconfig.config.annotations.Color;
+import cc.polyfrost.oneconfig.config.annotations.Dropdown;
 import cc.polyfrost.oneconfig.config.annotations.Switch;
 import cc.polyfrost.oneconfig.config.core.OneColor;
 import cc.polyfrost.oneconfig.config.data.Mod;
@@ -17,20 +18,24 @@ import java.io.File;
 public class GlintConfig extends Config {
 
     @Color(
-            name = "Enchantment Glint Color",
-            category = "General"
+            name = "Enchantment Glint Color"
     )
     public static OneColor color = new OneColor(-8372020);
 
     @Switch(
-            name = "Shiny Potions",
-            category = "General"
+            name = "Shiny Potions"
     )
     public static boolean potionGlint;
 
+    @Dropdown(
+            name = "Potion Glint Type",
+            options = {"Background Only", "All"}
+    )
+    public static int potionGlintType = 0;
+
     @Button(
             name = "Reset Color",
-            category = "General", text = "Reset"
+            text = "Reset"
     )
     Runnable reset = (() -> {
         Minecraft.getMinecraft().displayGuiScreen(null);

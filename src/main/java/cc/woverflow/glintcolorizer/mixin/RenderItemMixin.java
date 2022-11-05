@@ -54,7 +54,7 @@ public abstract class RenderItemMixin {
 
     @Redirect(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderEffect(Lnet/minecraft/client/resources/model/IBakedModel;)V"))
     private void shouldRender(RenderItem instance, IBakedModel model, ItemStack stack, IBakedModel model2) {
-        if (RenderItemHook.isRenderingGUI && stack.getItem() instanceof ItemPotion && GlintConfig.potionGlint) {
+        if (RenderItemHook.isRenderingGUI && stack.getItem() instanceof ItemPotion && GlintConfig.potionGlint && GlintConfig.potionGlintType == 0) {
             return;
         }
         renderEffect(model);
