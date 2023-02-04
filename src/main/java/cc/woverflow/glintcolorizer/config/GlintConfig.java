@@ -45,7 +45,7 @@ public class GlintConfig extends Config {
     });
 
     public GlintConfig() {
-        super(new Mod(GlintColorizer.NAME, ModType.UTIL_QOL, new VigilanceMigrator(new File(GlintColorizer.modDir, GlintColorizer.ID + ".toml").getPath())), GlintColorizer.ID + ".json");
+        super(new Mod(GlintColorizer.NAME, ModType.UTIL_QOL, "/glintcolorizer_dark.svg", new VigilanceMigrator(new File(GlintColorizer.modDir, GlintColorizer.ID + ".toml").getPath())), GlintColorizer.ID + ".json");
         initialize();
 
         addDependency("potionGlintType", "potionGlint");
