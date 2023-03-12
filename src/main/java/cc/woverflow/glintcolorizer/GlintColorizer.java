@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import cc.woverflow.glintcolorizer.command.GlintCommand;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+//#endif
 
 //#if MODERN==0
 @Mod(modid = GlintColorizer.ID, name = GlintColorizer.NAME, version = GlintColorizer.VER)
