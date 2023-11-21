@@ -1,7 +1,7 @@
 {
   "compatibilityLevel": "${java_level}",
   "minVersion": "0.7",
-  "package": "cc.woverflow.glintcolorizer.mixin",
+  "package": "org.polyfrost.glintcolorizer.mixin",
   "refmap": "mixins.${id}.refmap.json",
   "mixins": [
     "LayerArmorBaseMixin",

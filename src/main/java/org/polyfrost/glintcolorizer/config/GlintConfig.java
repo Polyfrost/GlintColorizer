@@ -1,5 +1,5 @@
 //#if MODERN==0 || FABRIC==1
-package cc.woverflow.glintcolorizer.config;
+package org.polyfrost.glintcolorizer.config;
 
 import cc.polyfrost.oneconfig.config.Config;
 import cc.polyfrost.oneconfig.config.annotations.Button;
@@ -10,7 +10,7 @@ import cc.polyfrost.oneconfig.config.core.OneColor;
 import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator;
-import cc.woverflow.glintcolorizer.GlintColorizer;
+import org.polyfrost.glintcolorizer.GlintColorizer;
 import net.minecraft.client.Minecraft;
 
 import java.io.File;

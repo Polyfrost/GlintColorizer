@@ -1,13 +1,13 @@
 //#if MODERN==0 || FABRIC==1
-package cc.woverflow.glintcolorizer;
+package org.polyfrost.glintcolorizer;
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager;
-import cc.woverflow.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.config.GlintConfig;
 import java.io.File;
 
 //#if MODERN==0
 import net.minecraftforge.fml.common.Mod;
-import cc.woverflow.glintcolorizer.command.GlintCommand;
+import org.polyfrost.glintcolorizer.command.GlintCommand;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 //#endif

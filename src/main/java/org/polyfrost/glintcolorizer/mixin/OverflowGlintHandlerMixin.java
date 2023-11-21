@@ -1,7 +1,7 @@
-package cc.woverflow.glintcolorizer.mixin;
+package org.polyfrost.glintcolorizer.mixin;
 
-import cc.woverflow.glintcolorizer.RenderItemHook;
-import cc.woverflow.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.RenderItemHook;
+import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemPotion;
 import org.spongepowered.asm.mixin.Dynamic;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
-@Mixin(targets = {"cc.polyfrost.overflowanimations.handlers.GlintHandler", "cc.woverflow.overflowanimations.GlintHandler"})
+@Mixin(targets = {"org.polyfrost.overflowanimations.handlers.GlintHandler", "cc.polyfrost.overflowanimations.handlers.GlintHandler", "cc.woverflow.overflowanimations.GlintHandler"})
 public class OverflowGlintHandlerMixin {
 
     @Dynamic("OverflowAnimations")

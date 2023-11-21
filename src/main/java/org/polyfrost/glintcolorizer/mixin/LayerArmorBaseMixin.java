@@ -1,7 +1,7 @@
-package cc.woverflow.glintcolorizer.mixin;
+package org.polyfrost.glintcolorizer.mixin;
 
 import cc.polyfrost.oneconfig.utils.color.ColorUtils;
-import cc.woverflow.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

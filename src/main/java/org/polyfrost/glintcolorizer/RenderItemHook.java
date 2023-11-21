@@ -1,4 +1,4 @@
-package cc.woverflow.glintcolorizer;
+package org.polyfrost.glintcolorizer;
 
 import net.minecraft.item.ItemStack;
 

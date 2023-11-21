@@ -1,7 +1,7 @@
-package cc.woverflow.glintcolorizer.mixin;
+package org.polyfrost.glintcolorizer.mixin;
 
-import cc.woverflow.glintcolorizer.RenderItemHook;
-import cc.woverflow.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.RenderItemHook;
+import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
