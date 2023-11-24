@@ -2,10 +2,7 @@
 package org.polyfrost.glintcolorizer.config;
 
 import cc.polyfrost.oneconfig.config.Config;
-import cc.polyfrost.oneconfig.config.annotations.Button;
-import cc.polyfrost.oneconfig.config.annotations.Color;
-import cc.polyfrost.oneconfig.config.annotations.Dropdown;
-import cc.polyfrost.oneconfig.config.annotations.Switch;
+import cc.polyfrost.oneconfig.config.annotations.*;
 import cc.polyfrost.oneconfig.config.core.OneColor;
 import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.data.ModType;
@@ -44,8 +41,10 @@ public class GlintConfig extends Config {
         GlintColorizer.config.openGui();
     });
 
+    @Exclude private static final File oldModDir = new File(new File("./W-OVERFLOW"), GlintColorizer.NAME);
+
     public GlintConfig() {
-        super(new Mod(GlintColorizer.NAME, ModType.UTIL_QOL, "/glintcolorizer_dark.svg", new VigilanceMigrator(new File(GlintColorizer.modDir, GlintColorizer.ID + ".toml").getPath())), GlintColorizer.ID + ".json");
+        super(new Mod(GlintColorizer.NAME, ModType.UTIL_QOL, "/glintcolorizer_dark.svg", new VigilanceMigrator(new File(oldModDir, GlintColorizer.ID + ".toml").getPath())), GlintColorizer.ID + ".json");
         initialize();
 
         addDependency("potionGlintType", "potionGlint");
