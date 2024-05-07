@@ -1,12 +1,14 @@
 {
-  "compatibilityLevel": "${java_level}",
+  "compatibilityLevel": "JAVA_8",
   "minVersion": "0.7",
   "package": "org.polyfrost.glintcolorizer.mixin",
   "refmap": "mixins.${id}.refmap.json",
   "mixins": [
+    "accessor.RenderItemAccessor",
+    "ForgeHooksClientMixin",
     "LayerArmorBaseMixin",
-    "OverflowGlintHandlerMixin",
-    "RenderItemMixin"
+    "RenderItemMixin_GlintCustomizer",
+    "RenderItemMixin_ShinyEffect"
   ],
   "verbose": true
 }
