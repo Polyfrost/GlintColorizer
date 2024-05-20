@@ -9,7 +9,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = ForgeHooksClient.class, remap = false)
+@Mixin(
+        value = ForgeHooksClient.class,
+        remap = false
+)
 public class ForgeHooksClientMixin {
 
     @Inject(

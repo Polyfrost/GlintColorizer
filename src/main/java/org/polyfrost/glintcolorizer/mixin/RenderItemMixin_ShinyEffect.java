@@ -1,10 +1,9 @@
 package org.polyfrost.glintcolorizer.mixin;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.handler.SecondGlintHandler;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -22,12 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class RenderItemMixin_ShinyEffect {
 
     @Shadow protected abstract void renderEffect(IBakedModel model);
-
     @Shadow @Final private static ResourceLocation RES_ITEM_GLINT;
-
     @Shadow @Final private TextureManager textureManager;
-
-    @Shadow protected abstract void renderModel(IBakedModel model, int color);
 
     @Inject(
             method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V",
@@ -61,7 +56,7 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private void glintColorizer$onRenderModel(ItemStack stack, IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
+        if ((GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground()) && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
             renderEffect(model);
         }
     }
@@ -76,35 +71,9 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private void glintColorizer$onRenderModel2(ItemStack stack, IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
-            GlStateManager.pushMatrix();
-            GlStateManager.depthMask(false);
-            GlStateManager.depthFunc(514);
-            GlStateManager.disableLighting();
-            GlStateManager.blendFunc(768, 1);
-            this.textureManager.bindTexture(RES_ITEM_GLINT);
-            GlStateManager.matrixMode(5890);
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(8.0f, 8.0f, 8.0f);
-            float f = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0f / 8.0f;
-            GlStateManager.translate(f, 0.0f, 0.0f);
-            GlStateManager.rotate(-50.0f, 0.0f, 0.0f, 1.0f);
-            this.renderModel(model, GlintConfig.INSTANCE.getGUIcolor().getRGB());
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(8.0f, 8.0f, 8.0f);
-            float f1 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0f / 8.0f;
-            GlStateManager.translate(-f1, 0.0f, 0.0f);
-            GlStateManager.rotate(10.0f, 0.0f, 0.0f, 1.0f);
-            this.renderModel(model, GlintConfig.INSTANCE.getGUIcolor().getRGB());
-            GlStateManager.popMatrix();
-            GlStateManager.matrixMode(5888);
-            GlStateManager.blendFunc(770, 771);
-            GlStateManager.enableLighting();
-            GlStateManager.depthFunc(515);
-            GlStateManager.depthMask(true);
-            this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
-            GlStateManager.popMatrix();
+        if (GlintConfig.INSTANCE.getPotionGlintBackground() && !GlintConfig.INSTANCE.getPotionGlintForeground() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
+            RenderItem instance = (RenderItem) (Object) this;
+            SecondGlintHandler.renderEffect(instance, model, textureManager, RES_ITEM_GLINT);
         }
     }
 
@@ -117,6 +86,9 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private boolean glintColorizer$disableRenderEffect(ItemStack instance) {
         if (RenderItemHook.INSTANCE.isPotionGlintEnabled() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
+            if (GlintConfig.INSTANCE.getPotionGlintForeground()) {
+                return false;
+            }
             return !GlintConfig.INSTANCE.getPotionGlintBackground();
         }
         return instance.hasEffect();

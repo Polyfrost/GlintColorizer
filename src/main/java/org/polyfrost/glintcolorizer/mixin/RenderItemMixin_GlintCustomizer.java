@@ -1,6 +1,5 @@
 package org.polyfrost.glintcolorizer.mixin;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
@@ -32,7 +31,7 @@ public class RenderItemMixin_GlintCustomizer {
     private void glintColorizer$push(IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
         if (GlintConfig.INSTANCE.getPotionGlintSize() && RenderItemHook.INSTANCE.isRenderingInGUI() &&
-                RenderItemHook.INSTANCE.isPotionItem() && GlintConfig.INSTANCE.getPotionGlintBackground()) {
+                RenderItemHook.INSTANCE.isPotionItem() && (GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground())) {
             GlStateManager.pushMatrix();
         }
     }
@@ -46,7 +45,7 @@ public class RenderItemMixin_GlintCustomizer {
     private void glintColorizer$pop(IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
         if (GlintConfig.INSTANCE.getPotionGlintSize() && RenderItemHook.INSTANCE.isRenderingInGUI() &&
-                RenderItemHook.INSTANCE.isPotionItem() && GlintConfig.INSTANCE.getPotionGlintBackground()) {
+                RenderItemHook.INSTANCE.isPotionItem() && (GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground())) {
             GlStateManager.popMatrix();
         }
     }
@@ -63,23 +62,25 @@ public class RenderItemMixin_GlintCustomizer {
     private int glintColorizer$modifyColor1(int color) {
         if (!GlintConfig.INSTANCE.enabled) { return color; }
         if (RenderItemHook.INSTANCE.isRenderingHeld()) {
-            return GlintConfig.INSTANCE.getHeldColor().getRGB();
+            return GlintConfig.INSTANCE.getHeldIndividualStrokes() ? GlintConfig.INSTANCE.getHeldStrokeOne().getRGB() : GlintConfig.INSTANCE.getHeldColor().getRGB();
         }
         if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
             if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
                 return glintColorizer$getPotionColor(Objects.requireNonNull(RenderItemHook.INSTANCE.getItemStack()));
             }
-            return GlintConfig.INSTANCE.getGUIcolor().getRGB();
+            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyColor().getRGB();
+            } else {
+                return GlintConfig.INSTANCE.getGuiIndividualStrokes() ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiColor().getRGB();
+            }
         }
         if (RenderItemHook.INSTANCE.isRenderingDropped()) {
-            return GlintConfig.INSTANCE.getDroppedColor().getRGB();
+            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedColor().getRGB();
         }
         if (RenderItemHook.INSTANCE.isRenderingFramed()) {
-            return GlintConfig.INSTANCE.getFramedColor().getRGB();
+            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedColor().getRGB();
         }
         return color;
-
-//        return GlintConfig.individualStrokes ? GlintConfig.strokeOne.getRGB() : GlintConfig.color.getRGB();
     }
 
     @ModifyArg(
@@ -94,22 +95,25 @@ public class RenderItemMixin_GlintCustomizer {
     private int glintColorizer$modifyColor2(int color) {
         if (!GlintConfig.INSTANCE.enabled) { return color; }
         if (RenderItemHook.INSTANCE.isRenderingHeld()) {
-            return GlintConfig.INSTANCE.getHeldColor().getRGB();
+            return GlintConfig.INSTANCE.getHeldIndividualStrokes() ? GlintConfig.INSTANCE.getHeldStrokeTwo().getRGB() : GlintConfig.INSTANCE.getHeldColor().getRGB();
         }
         if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
             if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
                 return glintColorizer$getPotionColor(Objects.requireNonNull(RenderItemHook.INSTANCE.getItemStack()));
             }
-            return GlintConfig.INSTANCE.getGUIcolor().getRGB();
+            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ? GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB() : GlintConfig.INSTANCE.getShinyColor().getRGB();
+            } else {
+                return GlintConfig.INSTANCE.getGuiIndividualStrokes() ? GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB() : GlintConfig.INSTANCE.getGuiColor().getRGB();
+            }
         }
         if (RenderItemHook.INSTANCE.isRenderingDropped()) {
-            return GlintConfig.INSTANCE.getDroppedColor().getRGB();
+            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ? GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB() : GlintConfig.INSTANCE.getDroppedColor().getRGB();
         }
         if (RenderItemHook.INSTANCE.isRenderingFramed()) {
-            return GlintConfig.INSTANCE.getFramedColor().getRGB();
+            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ? GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB() : GlintConfig.INSTANCE.getFramedColor().getRGB();
         }
         return color;
-//        return GlintConfig.INSTANCE.getIndividualStrokes() ? GlintConfig.INSTANCE.getStrokeTwo().getRGB() : GlintConfig.INSTANCE.getColor().getRGB();
     }
 
     /**
@@ -127,10 +131,5 @@ public class RenderItemMixin_GlintCustomizer {
             return color;
         }
     }
-
-//    @Unique
-//    private void glintColorizer$configColors() {
-//
-//    }
 
 }

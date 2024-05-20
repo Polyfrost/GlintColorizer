@@ -8,7 +8,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(value = LayerArmorBase.class, priority = Integer.MIN_VALUE)
+@Mixin(
+        value = LayerArmorBase.class,
+        priority = Integer.MIN_VALUE
+)
 public class LayerArmorBaseMixin {
 
     @ModifyArgs(
