@@ -1,5 +1,6 @@
 package org.polyfrost.glintcolorizer
 
+import cc.polyfrost.oneconfig.config.core.ConfigUtils
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
@@ -18,6 +19,8 @@ object GlintColorizer {
     const val NAME: String = "@NAME@"
     const val VER: String = "@VER@"
     const val ID: String = "@ID@"
+
+    val path = "${ConfigUtils.getProfileDir().absolutePath}/${ID}/caches/"
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent?) {

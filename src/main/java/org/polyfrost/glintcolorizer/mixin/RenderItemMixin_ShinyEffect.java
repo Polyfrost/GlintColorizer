@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -56,7 +57,7 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private void glintColorizer$onRenderModel(ItemStack stack, IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if ((GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground()) && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
+        if ((GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground()) && glintColorizer$isValidItem(stack)) {
             renderEffect(model);
         }
     }
@@ -71,7 +72,7 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private void glintColorizer$onRenderModel2(ItemStack stack, IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (GlintConfig.INSTANCE.getPotionGlintBackground() && !GlintConfig.INSTANCE.getPotionGlintForeground() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect()) {
+        if (GlintConfig.INSTANCE.getPotionGlintBackground() && !GlintConfig.INSTANCE.getPotionGlintForeground() && glintColorizer$isValidItem(stack)) {
             RenderItem instance = (RenderItem) (Object) this;
             SecondGlintHandler.renderEffect(instance, model, textureManager, RES_ITEM_GLINT);
         }
@@ -86,10 +87,7 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private boolean glintColorizer$disableRenderEffect(ItemStack instance) {
         if (RenderItemHook.INSTANCE.isPotionGlintEnabled() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
-            if (GlintConfig.INSTANCE.getPotionGlintForeground()) {
-                return false;
-            }
-            return !GlintConfig.INSTANCE.getPotionGlintBackground();
+            return !GlintConfig.INSTANCE.getPotionGlintForeground() && !GlintConfig.INSTANCE.getPotionGlintBackground();
         }
         return instance.hasEffect();
     }
@@ -108,6 +106,11 @@ public abstract class RenderItemMixin_ShinyEffect {
             GlStateManager.scale(1.25, 1.25, 1.25);
             GlStateManager.translate(-0.1, -0.1, 0.0);
         }
+    }
+
+    @Unique
+    private boolean glintColorizer$isValidItem(ItemStack stack) {
+        return RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect();
     }
 
 }

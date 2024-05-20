@@ -35,6 +35,7 @@ object GlintConfig : Config(
         droppedColor = OneColor(defaultColor)
         framedColor = OneColor(defaultColor)
         shinyColor = OneColor(defaultColor)
+        armorColor = OneColor(defaultColor)
         /* Individual Strokes Colors */
         heldStrokeOne = OneColor(defaultColor)
         heldStrokeTwo = OneColor(defaultColor)
@@ -61,7 +62,7 @@ object GlintConfig : Config(
         category = "Global",
         subcategory = "Color Configuration",
         text = "Reset",
-        description = "Resets ALL custom shiny pots settings"
+        description = "Resets ALL custom shiny pots settings."
     )
     var resetShinyPots: Runnable = (Runnable {
         Minecraft.getMinecraft().displayGuiScreen(null)
@@ -122,7 +123,7 @@ object GlintConfig : Config(
     })
 
     @Switch(
-        name = "Modify glint strokes individually",
+        name = "Modify Strokes Individually",
         category = "Held Item Glint Color",
     )
     var heldIndividualStrokes: Boolean = false
@@ -137,14 +138,14 @@ object GlintConfig : Config(
     @Color(
         name = "Stroke 1 Color",
         category = "Held Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the first stroke of the enchantment glint effect."
     )
     var heldStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
         category = "Held Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the second stroke of the enchantment glint effect."
     )
     var heldStrokeTwo: OneColor = OneColor(defaultColor)
 
@@ -166,7 +167,7 @@ object GlintConfig : Config(
     })
 
     @Switch(
-        name = "Modify glint strokes individually",
+        name = "Modify Strokes Individually",
         category = "GUI Item Glint Color",
     )
     var guiIndividualStrokes: Boolean = false
@@ -181,14 +182,14 @@ object GlintConfig : Config(
     @Color(
         name = "Stroke 1 Color",
         category = "GUI Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the first stroke of the enchantment glint effect."
     )
     var guiStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
         category = "GUI Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the second stroke of the enchantment glint effect."
     )
     var guiStrokeTwo: OneColor = OneColor(defaultColor)
 
@@ -210,7 +211,7 @@ object GlintConfig : Config(
     })
 
     @Switch(
-        name = "Modify glint strokes individually",
+        name = "Modify Strokes Individually",
         category = "Dropped Item Glint Color",
     )
     var droppedIndividualStrokes: Boolean = false
@@ -225,14 +226,14 @@ object GlintConfig : Config(
     @Color(
         name = "Stroke 1 Color",
         category = "Dropped Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the first stroke of the enchantment glint effect."
     )
     var droppedStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
         category = "Dropped Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the second stroke of the enchantment glint effect."
     )
     var droppedStrokeTwo: OneColor = OneColor(defaultColor)
 
@@ -254,7 +255,7 @@ object GlintConfig : Config(
     })
 
     @Switch(
-        name = "Modify glint strokes individually",
+        name = "Modify Strokes Individually",
         category = "Framed Item Glint Color",
     )
     var framedIndividualStrokes: Boolean = false
@@ -269,18 +270,32 @@ object GlintConfig : Config(
     @Color(
         name = "Stroke 1 Color",
         category = "Framed Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the first stroke of the enchantment glint effect."
     )
     var framedStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
         category = "Framed Item Glint Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the second stroke of the enchantment glint effect."
     )
     var framedStrokeTwo: OneColor = OneColor(defaultColor)
 
     /* Armor */
+    @Button(
+        name = "Reset Armor Glint",
+        category = "Armor Glint Color",
+        subcategory = "Color Configuration",
+        text = "Reset",
+        description = "Resets ALL custom glint colors."
+    )
+    var resetArmor: Runnable = (Runnable {
+        Minecraft.getMinecraft().displayGuiScreen(null)
+        armorColor = OneColor(defaultColor)
+        GlintConfig.save()
+        openGui()
+    })
+
     @Color(
         name = "Armor Glint Color",
         category = "Armor Glint Color",
@@ -342,14 +357,14 @@ object GlintConfig : Config(
     var potionBasedColor: Boolean = false
 
     @Switch(
-        name = "Modify glint strokes individually",
+        name = "Modify the Shiny Effect's Strokes Individually",
         category = "Shiny Pots",
         subcategory = "Color"
     )
     var shinyIndividualStrokes: Boolean = false
 
     @Color(
-        name = "Shiny Effect Glint Color",
+        name = "Shiny Glint Effect Color",
         category = "Shiny Pots",
         subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
@@ -360,7 +375,7 @@ object GlintConfig : Config(
         name = "Stroke 1 Color",
         category = "Shiny Pots",
         subcategory = "Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the first stroke of the shiny glint effect."
     )
     var shinyStrokeOne: OneColor = OneColor(defaultColor)
 
@@ -368,7 +383,7 @@ object GlintConfig : Config(
         name = "Stroke 2 Color",
         category = "Shiny Pots",
         subcategory = "Color",
-        description = "Modifies one of the enchantment glint stroke colors."
+        description = "Modifies the second stroke of the shiny glint effect."
     )
     var shinyStrokeTwo: OneColor = OneColor(defaultColor)
 
