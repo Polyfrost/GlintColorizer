@@ -6,7 +6,6 @@ import cc.polyfrost.oneconfig.config.core.OneColor
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
-import net.minecraft.client.Minecraft
 import org.polyfrost.glintcolorizer.GlintColorizer
 import java.io.File
 
@@ -23,12 +22,10 @@ object GlintConfig : Config(
     @Button(
         name = "Reset ALL Colors Settings",
         category = "Global",
-        subcategory = "Color Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors settings and defaults them back to the vanilla color."
     )
     var resetColors: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         /* Singular Colors */
         heldColor = OneColor(defaultColor)
         guiColor = OneColor(defaultColor)
@@ -52,143 +49,205 @@ object GlintConfig : Config(
         guiIndividualStrokes = false
         droppedIndividualStrokes = false
         framedIndividualStrokes = false
-
-        GlintConfig.save()
-        openGui()
     })
 
     @Button(
         name = "Reset ALL Shiny Pots Settings",
         category = "Global",
-        subcategory = "Color Configuration",
         text = "Reset",
         description = "Resets ALL custom shiny pots settings."
     )
     var resetShinyPots: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         potionGlint = false
         potionGlintSize = false
         potionGlintBackground = false
         potionBasedColor = false
         potionGlintForeground = false
-        GlintConfig.save()
-        openGui()
+    })
+
+    @Color(
+        name = "Global Glint Color",
+        category = "Global",
+        subcategory = "Configuration",
+        description = "Modifies the color of the enchantment glint."
+    )
+    var globalColor: OneColor = OneColor(defaultColor)
+
+    @Button(
+        name = "Apply Global Glint Color",
+        category = "Global",
+        subcategory = "Configuration",
+        text = "Apply",
+        description = "Applies your global glint color. Resets ALL custom colors."
+    )
+    var applyColors: Runnable = (Runnable {
+        /* Singular Colors */
+        heldColor = OneColor(globalColor.rgb)
+        guiColor = OneColor(globalColor.rgb)
+        droppedColor = OneColor(globalColor.rgb)
+        framedColor = OneColor(globalColor.rgb)
+        shinyColor = OneColor(globalColor.rgb)
+        armorColor = OneColor(globalColor.rgb)
+        /* Stroke */
+        heldIndividualStrokes = false
+        guiIndividualStrokes = false
+        droppedIndividualStrokes = false
+        framedIndividualStrokes = false
     })
 
 //    @Button(
 //        name = "Sync Armor Glint With Item Glint",
 //        category = "Global",
-//        subcategory = "Color Configuration",
+//        subcategory = "Configuration",
 //        text = "Sync",
 //        description = "Syncs the armor glint color with the item glint color."
 //    )
 //    var syncAtoI: Runnable = (Runnable {
-//        Minecraft.getMinecraft().displayGuiScreen(null)
 //        guiStrokeOne = OneColor(defaultColor)
 //        guiStrokeTwo = OneColor(defaultColor)
-//        save()
-//        openGui()
 //    })
 //
 //    @Button(
 //        name = "Sync Item Glint With Armor Glint",
 //        category = "Global",
-//        subcategory = "Color Configuration",
+//        subcategory = "Configuration",
 //        text = "Sync",
 //        description = "Syncs the item glint color with the armor glint color ."
 //    )
 //    var syncItoA: Runnable = (Runnable {
-//        Minecraft.getMinecraft().displayGuiScreen(null)
 //        guiStrokeOne = OneColor(defaultColor)
 //        guiStrokeTwo = OneColor(defaultColor)
-//        save()
-//        openGui()
 //    })
 
     /* Held Items */
     @Button(
         name = "Reset Held Glint Colors",
-        category = "Held Item Glint Color",
-        subcategory = "Color Configuration",
+        category = "Held Item",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetHeld: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         heldColor = OneColor(defaultColor)
         heldStrokeOne = OneColor(defaultColor)
         heldStrokeTwo = OneColor(defaultColor)
-        GlintConfig.save()
-        openGui()
+    })
+
+    @Button(
+        name = "Reset Held Glint Transformations",
+        category = "Held Item",
+        subcategory = "Configuration",
+        text = "Reset",
+        description = "Resets ALL custom glint transformations."
+    )
+    var resetHeld2: Runnable = (Runnable {
+        heldSpeed = 1.0F
+        heldStrokeRotOne = -50.0F
+        heldStrokeRotTwo = 10.0F
     })
 
     @Switch(
         name = "Modify Strokes Individually",
-        category = "Held Item Glint Color",
+        category = "Held Item",
+        subcategory = "Color"
     )
     var heldIndividualStrokes: Boolean = false
 
     @Color(
         name = "Held Item Glint Color",
-        category = "Held Item Glint Color",
+        category = "Held Item",
+        subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
     var heldColor: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 1 Color",
-        category = "Held Item Glint Color",
+        category = "Held Item",
+        subcategory = "Color",
         description = "Modifies the first stroke of the enchantment glint effect."
     )
     var heldStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
-        category = "Held Item Glint Color",
+        category = "Held Item",
+        subcategory = "Color",
         description = "Modifies the second stroke of the enchantment glint effect."
     )
     var heldStrokeTwo: OneColor = OneColor(defaultColor)
 
+    @Slider(
+        name = "Speed",
+        category = "Held Item",
+        subcategory = "Speed",
+        min = 0.1F,
+        max = 10.0F,
+        instant = true
+    )
+    var heldSpeed = 1.0F
+
+    @Slider(
+        name = "Stroke 1 Rotation",
+        category = "Held Item",
+        subcategory = "Rotation",
+        min = -180.0F,
+        max = 180.0F,
+        instant = true
+    )
+    var heldStrokeRotOne = -50.0F
+
+    @Slider(
+        name = "Stroke 2 Rotation",
+        category = "Held Item",
+        subcategory = "Rotation",
+        min = -180.0F,
+        max = 180.0F,
+        instant = true
+    )
+    var heldStrokeRotTwo = 10.0F
+
     /* Gui Items */
     @Button(
         name = "Reset GUI Item Glint Colors",
-        category = "GUI Item Glint Color",
-        subcategory = "Color Configuration",
+        category = "GUI Item",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetGui: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         guiColor = OneColor(defaultColor)
         guiStrokeOne = OneColor(defaultColor)
         guiStrokeTwo = OneColor(defaultColor)
-        GlintConfig.save()
-        openGui()
     })
 
     @Switch(
         name = "Modify Strokes Individually",
-        category = "GUI Item Glint Color",
+        category = "GUI Item ",
+        subcategory = "Color"
     )
     var guiIndividualStrokes: Boolean = false
 
     @Color(
         name = "GUI Item Glint Color",
-        category = "GUI Item Glint Color",
+        category = "GUI Item",
+        subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
     var guiColor: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 1 Color",
-        category = "GUI Item Glint Color",
+        category = "GUI Item",
+        subcategory = "Color",
         description = "Modifies the first stroke of the enchantment glint effect."
     )
     var guiStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
-        category = "GUI Item Glint Color",
+        category = "GUI Item",
+        subcategory = "Color",
         description = "Modifies the second stroke of the enchantment glint effect."
     )
     var guiStrokeTwo: OneColor = OneColor(defaultColor)
@@ -196,43 +255,44 @@ object GlintConfig : Config(
     /* Dropped Items */
     @Button(
         name = "Reset Dropped Item Glint Colors",
-        category = "Dropped Item Glint Color",
-        subcategory = "Color Configuration",
+        category = "Dropped Item",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetDropped: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         droppedColor = OneColor(defaultColor)
         droppedStrokeOne = OneColor(defaultColor)
         droppedStrokeTwo = OneColor(defaultColor)
-        GlintConfig.save()
-        openGui()
     })
 
     @Switch(
         name = "Modify Strokes Individually",
-        category = "Dropped Item Glint Color",
+        category = "Dropped Item",
+        subcategory = "Color"
     )
     var droppedIndividualStrokes: Boolean = false
 
     @Color(
         name = "Dropped Item Glint Color",
-        category = "Dropped Item Glint Color",
+        category = "Dropped Item",
+        subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
     var droppedColor: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 1 Color",
-        category = "Dropped Item Glint Color",
+        category = "Dropped Item",
+        subcategory = "Color",
         description = "Modifies the first stroke of the enchantment glint effect."
     )
     var droppedStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
-        category = "Dropped Item Glint Color",
+        category = "Dropped Item",
+        subcategory = "Color",
         description = "Modifies the second stroke of the enchantment glint effect."
     )
     var droppedStrokeTwo: OneColor = OneColor(defaultColor)
@@ -240,43 +300,44 @@ object GlintConfig : Config(
     /* Framed Items */
     @Button(
         name = "Reset Framed Item Glint Colors",
-        category = "Framed Item Glint Color",
-        subcategory = "Color Configuration",
+        category = "Framed Item",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetFramed: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         droppedColor = OneColor(defaultColor)
         droppedStrokeOne = OneColor(defaultColor)
         droppedStrokeTwo = OneColor(defaultColor)
-        GlintConfig.save()
-        openGui()
     })
 
     @Switch(
         name = "Modify Strokes Individually",
-        category = "Framed Item Glint Color",
+        category = "Framed Item",
+        subcategory = "Color"
     )
     var framedIndividualStrokes: Boolean = false
 
     @Color(
         name = "Framed Item Glint Color",
-        category = "Framed Item Glint Color",
+        category = "Framed Item",
+        subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
     var framedColor: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 1 Color",
-        category = "Framed Item Glint Color",
+        category = "Framed Item",
+        subcategory = "Color",
         description = "Modifies the first stroke of the enchantment glint effect."
     )
     var framedStrokeOne: OneColor = OneColor(defaultColor)
 
     @Color(
         name = "Stroke 2 Color",
-        category = "Framed Item Glint Color",
+        category = "Framed Item",
+        subcategory = "Color",
         description = "Modifies the second stroke of the enchantment glint effect."
     )
     var framedStrokeTwo: OneColor = OneColor(defaultColor)
@@ -284,21 +345,19 @@ object GlintConfig : Config(
     /* Armor */
     @Button(
         name = "Reset Armor Glint",
-        category = "Armor Glint Color",
-        subcategory = "Color Configuration",
+        category = "Armor",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetArmor: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         armorColor = OneColor(defaultColor)
-        GlintConfig.save()
-        openGui()
     })
 
     @Color(
         name = "Armor Glint Color",
-        category = "Armor Glint Color",
+        category = "Armor",
+        subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
     var armorColor: OneColor = OneColor(defaultColor)
@@ -307,20 +366,17 @@ object GlintConfig : Config(
     @Button(
         name = "Reset Shiny Pots Glint Colors",
         category = "Shiny Pots",
-        subcategory = "Color Configuration",
+        subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetShiny: Runnable = (Runnable {
-        Minecraft.getMinecraft().displayGuiScreen(null)
         shinyColor = OneColor(defaultColor)
         shinyStrokeOne = OneColor(defaultColor)
         shinyStrokeTwo = OneColor(defaultColor)
         potionBasedColor = false
         potionGlintBackground = false
         potionGlintForeground = false
-        GlintConfig.save()
-        openGui()
     })
 
     @Switch(

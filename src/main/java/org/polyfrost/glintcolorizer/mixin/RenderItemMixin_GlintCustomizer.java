@@ -42,6 +42,47 @@ public class RenderItemMixin_GlintCustomizer {
             method = "renderEffect",
             at = @At(
                     value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/GlStateManager;translate(FFF)V"
+            ),
+            index = 0
+    )
+    private float glintColorizer$modifySpeed(float speed) {
+        if (!GlintConfig.INSTANCE.enabled) { return speed; }
+        return glintColorizer$getModifiedSpeed(speed); //todo: adw
+    }
+
+    @ModifyArg(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFFF)V",
+                    ordinal = 0
+            ),
+            index = 0
+    )
+    private float glintColorizer$modifyRotation(float angle) {
+        if (!GlintConfig.INSTANCE.enabled) { return angle; }
+        return glintColorizer$getModifiedRotation(angle, true); //todo: adw
+    }
+
+    @ModifyArg(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFFF)V",
+                    ordinal = 1
+            ),
+            index = 0
+    )
+    private float glintColorizer$modifyRotation2(float angle) {
+        if (!GlintConfig.INSTANCE.enabled) { return angle; }
+        return glintColorizer$getModifiedRotation(angle, false); //todo: adw
+    }
+
+    @ModifyArg(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V",
                     ordinal = 0
             ),
@@ -101,6 +142,76 @@ public class RenderItemMixin_GlintCustomizer {
         }
 
         return color;
+    }
+
+    @Unique
+    private float glintColorizer$getModifiedRotation(float color, boolean isFirstStroke) {
+        if (RenderItemHook.INSTANCE.isRenderingHeld()) {
+            return isFirstStroke ? GlintConfig.INSTANCE.getHeldStrokeRotOne() : GlintConfig.INSTANCE.getHeldStrokeRotTwo();
+        }
+
+//        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
+//            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
+//                return glintColorizer$getPotionColor(RenderItemHook.INSTANCE.getItemStack());
+//            }
+//            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+//                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ?
+//                        (isFirstStroke ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB()) :
+//                        GlintConfig.INSTANCE.getShinyColor().getRGB();
+//            }
+//            return GlintConfig.INSTANCE.getGuiIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getGuiColor().getRGB();
+//        }
+//
+//        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
+//            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getDroppedColor().getRGB();
+//        }
+//
+//        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
+//            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getFramedColor().getRGB();
+//        }
+
+        return color;
+    }
+
+    @Unique
+    private float glintColorizer$getModifiedSpeed(float speed) {
+        if (RenderItemHook.INSTANCE.isRenderingHeld()) {
+            return GlintConfig.INSTANCE.getHeldSpeed() * speed;
+        }
+
+//        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
+//            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
+//                return glintColorizer$getPotionColor(RenderItemHook.INSTANCE.getItemStack());
+//            }
+//            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+//                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ?
+//                        (isFirstStroke ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB()) :
+//                        GlintConfig.INSTANCE.getShinyColor().getRGB();
+//            }
+//            return GlintConfig.INSTANCE.getGuiIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getGuiColor().getRGB();
+//        }
+//
+//        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
+//            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getDroppedColor().getRGB();
+//        }
+//
+//        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
+//            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ?
+//                    (isFirstStroke ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB()) :
+//                    GlintConfig.INSTANCE.getFramedColor().getRGB();
+//        }
+
+        return speed;
     }
 
     @Unique
