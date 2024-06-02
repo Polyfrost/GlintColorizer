@@ -2,6 +2,7 @@ package org.polyfrost.glintcolorizer.mixin;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import org.polyfrost.glintcolorizer.config.ColorSettings;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
 import net.minecraft.client.renderer.GlStateManager;
@@ -110,9 +111,7 @@ public class RenderItemMixin_GlintCustomizer {
     @Unique
     private int glintColorizer$getModifiedColor(int color, boolean isFirstStroke) {
         if (RenderItemHook.INSTANCE.isRenderingHeld()) {
-            return GlintConfig.INSTANCE.getHeldIndividualStrokes() ?
-                    (isFirstStroke ? GlintConfig.INSTANCE.getHeldStrokeOne().getRGB() : GlintConfig.INSTANCE.getHeldStrokeTwo().getRGB()) :
-                    GlintConfig.INSTANCE.getHeldColor().getRGB();
+            return glintColorizer$getColor(GlintConfig.INSTANCE.getHeldItem(), isFirstStroke);
         }
 
         if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
@@ -120,28 +119,27 @@ public class RenderItemMixin_GlintCustomizer {
                 return glintColorizer$getPotionColor(RenderItemHook.INSTANCE.getItemStack());
             }
             if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
-                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ?
-                        (isFirstStroke ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB()) :
-                        GlintConfig.INSTANCE.getShinyColor().getRGB();
+                return glintColorizer$getColor(GlintConfig.INSTANCE.getShinyPots(), isFirstStroke);
             }
-            return GlintConfig.INSTANCE.getGuiIndividualStrokes() ?
-                    (isFirstStroke ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB()) :
-                    GlintConfig.INSTANCE.getGuiColor().getRGB();
+            return glintColorizer$getColor(GlintConfig.INSTANCE.getGuiItem(), isFirstStroke);
         }
 
         if (RenderItemHook.INSTANCE.isRenderingDropped()) {
-            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ?
-                    (isFirstStroke ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB()) :
-                    GlintConfig.INSTANCE.getDroppedColor().getRGB();
+            return glintColorizer$getColor(GlintConfig.INSTANCE.getDroppedItem(), isFirstStroke);
         }
 
         if (RenderItemHook.INSTANCE.isRenderingFramed()) {
-            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ?
-                    (isFirstStroke ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB()) :
-                    GlintConfig.INSTANCE.getFramedColor().getRGB();
+            return glintColorizer$getColor(GlintConfig.INSTANCE.getFramedItem(), isFirstStroke);
         }
 
         return color;
+    }
+
+    @Unique
+    private int glintColorizer$getColor(ColorSettings settings, boolean isFirstStroke) {
+        return settings.getIndividualStrokes() ?
+                (isFirstStroke ? settings.getStrokeOneColor().getRGB() : settings.getStrokeTwoColor().getRGB()) :
+                settings.getGlintColor().getRGB();
     }
 
     @Unique

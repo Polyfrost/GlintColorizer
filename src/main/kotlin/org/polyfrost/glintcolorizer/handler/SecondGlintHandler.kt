@@ -9,10 +9,7 @@ import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.client.resources.model.IBakedModel
 import net.minecraft.util.ResourceLocation
-import org.polyfrost.glintcolorizer.config.GlintConfig.guiStrokeOne
-import org.polyfrost.glintcolorizer.config.GlintConfig.guiColor
-import org.polyfrost.glintcolorizer.config.GlintConfig.guiIndividualStrokes
-import org.polyfrost.glintcolorizer.config.GlintConfig.guiStrokeTwo
+import org.polyfrost.glintcolorizer.config.GlintConfig
 import org.polyfrost.glintcolorizer.mixin.accessor.RenderItemAccessor
 
 fun renderEffect(renderItem : RenderItem, model : IBakedModel, textureManager : TextureManager, glintResource : ResourceLocation) {
@@ -41,7 +38,7 @@ fun glintStroke1(renderItem : RenderItem, model : IBakedModel) {
     GlStateManager.translate(f, 0.0f, 0.0f)
     GlStateManager.rotate(-50.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (guiIndividualStrokes) guiStrokeOne.rgb else guiColor.rgb
+        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeOneColor.rgb else GlintConfig.guiItem.glintColor.rgb
     )
     GlStateManager.popMatrix()
 }
@@ -53,7 +50,7 @@ fun glintStroke2(renderItem : RenderItem, model : IBakedModel) {
     GlStateManager.translate(-f1, 0.0f, 0.0f)
     GlStateManager.rotate(10.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (guiIndividualStrokes) guiStrokeTwo.rgb else guiColor.rgb
+        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeTwoColor.rgb else GlintConfig.guiItem.glintColor.rgb
     )
     GlStateManager.popMatrix()
 }

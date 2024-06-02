@@ -4,12 +4,12 @@
   "package": "org.polyfrost.glintcolorizer.mixin",
   "refmap": "mixins.${id}.refmap.json",
   "mixins": [
-    "accessor.RenderItemAccessor",
     "ForgeHooksClientMixin",
     "LayerArmorBaseMixin",
-    "PotionHelperMixin",
     "RenderItemMixin_GlintCustomizer",
-    "RenderItemMixin_ShinyEffect"
+    "RenderItemMixin_ShinyEffect",
+    "accessor.RenderItemAccessor",
+    "oneconfig.ConfigMixin"
   ],
   "verbose": true
 }
