@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @Mixin(value = Config.class, remap = false)
 public class ConfigMixin {
@@ -36,17 +35,40 @@ public class ConfigMixin {
     @ModifyVariable(method = "generateOptionList(Ljava/lang/Object;Ljava/lang/Class;Lcc/polyfrost/oneconfig/config/elements/OptionPage;Lcc/polyfrost/oneconfig/config/data/Mod;Z)V", at = @At(value = "LOAD", ordinal = 0), name = "field")
     private Field generate(Field field) {
         if (field.isAnnotationPresent(ColorEntry.class)) {
-            addOptions(page, field, instance);
+            glintColorizer$addOptions(page, field, instance);
         }
         return field;
     }
 
     @Unique
-    private void addOptions(OptionPage page, Field field, Object instance) {
+    private void glintColorizer$addOptions(OptionPage page, Field field, Object instance) {
         ColorEntry annotation = field.getAnnotation(ColorEntry.class);
         ColorSettings colorSettings = (ColorSettings) ConfigUtils.getField(field, instance);
+        BasicOption strokeOne = null;
+        BasicOption strokeTwo = null;
+        BasicOption individualStrokes = null;
         for (BasicOption option : glintColorizer$getClassOptions(colorSettings)) {
+            if (option.getField().getName().equals("strokeOneColor")) strokeOne = option;
+            if (option.getField().getName().equals("strokeTwoColor")) strokeTwo = option;
+            if (option.getField().getName().equals("individualStrokes")) individualStrokes = option;
             ConfigUtils.getSubCategory(page, annotation.category(), option.subcategory).options.add(option);
+        }
+        if (strokeOne != null && strokeTwo != null && individualStrokes != null) {
+            BasicOption finalIndividualStrokes = individualStrokes;
+            strokeOne.addDependency(individualStrokes.name, () -> {
+                try {
+                    return (boolean) finalIndividualStrokes.get();
+                } catch (IllegalAccessException ignored) {
+                    return true;
+                }
+            });
+            strokeTwo.addDependency(individualStrokes.name, () -> {
+                try {
+                    return (boolean) finalIndividualStrokes.get();
+                } catch (IllegalAccessException ignored) {
+                    return true;
+                }
+            });
         }
     }
 
