@@ -14,6 +14,8 @@ class GlintEffectOptions {
     )
     var resetColor = Runnable {
         reset(false)
+        GlintConfig.save()
+        GlintConfig.openGui()
     }
 
     @Button(
@@ -25,6 +27,8 @@ class GlintEffectOptions {
     )
     var resetTransforms = Runnable {
         reset2()
+        GlintConfig.save()
+        GlintConfig.openGui()
     }
 
     @Switch(

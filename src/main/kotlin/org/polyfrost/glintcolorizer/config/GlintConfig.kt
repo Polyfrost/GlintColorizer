@@ -36,6 +36,8 @@ object GlintConfig : Config(
         framedItem.reset(true)
         shinyPots.reset(true)
         armorColor = OneColor(defaultColor)
+        save()
+        openGui()
     }
 
     @Button(
@@ -50,6 +52,8 @@ object GlintConfig : Config(
         droppedItem.reset2()
         framedItem.reset2()
         shinyPots.reset2()
+        save()
+        openGui()
     }
 
     @Button(
@@ -64,6 +68,8 @@ object GlintConfig : Config(
         potionGlintBackground = false
         potionBasedColor = false
         potionGlintForeground = false
+        save()
+        openGui()
     }
 
     @Color(
@@ -83,18 +89,20 @@ object GlintConfig : Config(
     )
     var applyColors = Runnable {
         /* Singular Colors */
-        heldItem.glintColor = OneColor(globalColor.rgb)
-        guiItem.glintColor = OneColor(globalColor.rgb)
-        droppedItem.glintColor = OneColor(globalColor.rgb)
-        framedItem.glintColor = OneColor(globalColor.rgb)
-        shinyPots.glintColor = OneColor(globalColor.rgb)
-        armorColor = OneColor(globalColor.rgb)
+        heldItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        guiItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        droppedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        framedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        shinyPots.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        armorColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
         /* Stroke */
         heldItem.individualStrokes = false
         guiItem.individualStrokes = false
         droppedItem.individualStrokes = false
         framedItem.individualStrokes = false
         shinyPots.individualStrokes = false
+        save()
+        openGui()
     }
 
     @Button(
@@ -110,6 +118,9 @@ object GlintConfig : Config(
         droppedItem.glintColor = OneColor(oldGlintValue)
         framedItem.glintColor = OneColor(oldGlintValue)
         shinyPots.glintColor = OneColor(oldGlintValue)
+
+        save()
+        openGui()
     }
 
     /* Held Items */
@@ -146,6 +157,8 @@ object GlintConfig : Config(
     )
     var resetArmor = Runnable {
         armorColor = OneColor(defaultColor)
+        save()
+        openGui()
     }
 
     @Color(
