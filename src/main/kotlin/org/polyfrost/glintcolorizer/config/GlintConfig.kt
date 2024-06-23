@@ -7,6 +7,8 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
 import org.polyfrost.glintcolorizer.GlintColorizer
+import org.polyfrost.glintcolorizer.config.annotation.ColorEntry
+import cc.polyfrost.oneconfig.config.annotations.Color
 import java.io.File
 
 object GlintConfig : Config(
@@ -18,6 +20,7 @@ object GlintConfig : Config(
 ) {
 
     @Exclude val defaultColor = -8372020
+    @Exclude var oldGlintValue = -10407781
 
     @Button(
         name = "Reset ALL Colors Settings",
@@ -26,12 +29,27 @@ object GlintConfig : Config(
         description = "Resets ALL custom glint colors settings and defaults them back to the vanilla color."
     )
     var resetColors = Runnable {
+        globalColor = OneColor(defaultColor)
         heldItem.reset(true)
         guiItem.reset(true)
         droppedItem.reset(true)
         framedItem.reset(true)
         shinyPots.reset(true)
         armorColor = OneColor(defaultColor)
+    }
+
+    @Button(
+        name = "Reset ALL Transformation Settings",
+        category = "Global",
+        text = "Reset",
+        description = "Resets ALL custom glint colors settings and defaults them back to the vanilla color."
+    )
+    var resetTransformations = Runnable {
+        heldItem.reset2()
+        guiItem.reset2()
+        droppedItem.reset2()
+        framedItem.reset2()
+        shinyPots.reset2()
     }
 
     @Button(
@@ -79,96 +97,44 @@ object GlintConfig : Config(
         shinyPots.individualStrokes = false
     }
 
-//    @Button(
-//        name = "Sync Armor Glint With Item Glint",
-//        category = "Global",
-//        subcategory = "Configuration",
-//        text = "Sync",
-//        description = "Syncs the armor glint color with the item glint color."
-//    )
-//    var syncAtoI: Runnable = (Runnable {
-//        guiStrokeOne = OneColor(defaultColor)
-//        guiStrokeTwo = OneColor(defaultColor)
-//    })
-//
-//    @Button(
-//        name = "Sync Item Glint With Armor Glint",
-//        category = "Global",
-//        subcategory = "Configuration",
-//        text = "Sync",
-//        description = "Syncs the item glint color with the armor glint color ."
-//    )
-//    var syncItoA: Runnable = (Runnable {
-//        guiStrokeOne = OneColor(defaultColor)
-//        guiStrokeTwo = OneColor(defaultColor)
-//    })
+    @Button(
+        name = "1.7 Glint Color",
+        category = "Global",
+        subcategory = "Configuration",
+        text = "Apply",
+        description = "Applies the 1.7 glint color to all transform types."
+    )
+    var oldGlint = Runnable {
+        heldItem.glintColor = OneColor(oldGlintValue)
+        /* GUI Items' glint color are actually the default 1.8 glint color! */
+        droppedItem.glintColor = OneColor(oldGlintValue)
+        framedItem.glintColor = OneColor(oldGlintValue)
+        shinyPots.glintColor = OneColor(oldGlintValue)
+    }
 
     /* Held Items */
     @ColorEntry(
         category = "Held Item"
     )
-    var heldItem = ColorSettings()
-
-    @Button(
-        name = "Reset Transformations",
-        category = "Held Item",
-        subcategory = "Configuration",
-        text = "Reset",
-        description = "Resets ALL custom glint transformations."
-    )
-    var resetHeld2 = Runnable {
-        heldSpeed = 1.0F
-        heldStrokeRotOne = -50.0F
-        heldStrokeRotTwo = 10.0F
-    }
-
-    @Slider(
-        name = "Speed",
-        category = "Held Item",
-        subcategory = "Speed",
-        min = 0.1F,
-        max = 10.0F,
-        instant = true
-    )
-    var heldSpeed = 1.0F
-
-    @Slider(
-        name = "Stroke 1 Rotation",
-        category = "Held Item",
-        subcategory = "Rotation",
-        min = -180.0F,
-        max = 180.0F,
-        instant = true
-    )
-    var heldStrokeRotOne = -50.0F
-
-    @Slider(
-        name = "Stroke 2 Rotation",
-        category = "Held Item",
-        subcategory = "Rotation",
-        min = -180.0F,
-        max = 180.0F,
-        instant = true
-    )
-    var heldStrokeRotTwo = 10.0F
+    var heldItem = GlintEffectOptions()
 
     /* Gui Items */
     @ColorEntry(
         category = "GUI Item"
     )
-    var guiItem = ColorSettings()
+    var guiItem = GlintEffectOptions()
 
     /* Dropped Items */
     @ColorEntry(
         category = "Dropped Item"
     )
-    var droppedItem = ColorSettings()
+    var droppedItem = GlintEffectOptions()
 
     /* Framed Items */
     @ColorEntry(
         category = "Framed Item"
     )
-    var framedItem = ColorSettings()
+    var framedItem = GlintEffectOptions()
 
     /* Armor */
     @Button(
@@ -213,7 +179,7 @@ object GlintConfig : Config(
     @ColorEntry(
         category = "Shiny Pots"
     )
-    var shinyPots = ColorSettings()
+    var shinyPots = GlintEffectOptions()
 
     @Checkbox(
         name = "Custom Shiny Effect Color",

@@ -2,7 +2,7 @@ package org.polyfrost.glintcolorizer.mixin;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import org.polyfrost.glintcolorizer.config.ColorSettings;
+import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,33 +10,53 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
 
 @Mixin(RenderItem.class)
 public class RenderItemMixin_GlintCustomizer {
 
-    @Unique
-    private final HashMap<Integer, Integer> glintColorizer$cachedColors = new HashMap<>();
+    @Unique private final HashMap<Integer, Integer> glintColorizer$cachedColors = new HashMap<>();
 
-    @Inject(method = "renderEffect", at = @At("HEAD"))
+    @Inject(
+            method = "renderEffect",
+            at = @At(
+                    value = "HEAD"
+            )
+    )
     private void glintColorizer$push(IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (glintColorizer$shouldApplyMatrix()) {
-            GlStateManager.pushMatrix();
-        }
+        if (!glintColorizer$shouldApplyMatrix()) { return; }
+        GlStateManager.pushMatrix();
     }
 
-    @Inject(method = "renderEffect", at = @At("TAIL"))
+    @Inject(
+            method = "renderEffect",
+            at = @At(
+                    value = "TAIL"
+            )
+    )
     private void glintColorizer$pop(IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (glintColorizer$shouldApplyMatrix()) {
-            GlStateManager.popMatrix();
-        }
+        if (glintColorizer$shouldApplyMatrix()) { return; }
+        GlStateManager.popMatrix();
+    }
+
+    @ModifyArgs(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/GlStateManager;scale(FFF)V"
+            )
+    )
+    private void glintColorizer$modifyScale(Args args) {
+        if (!GlintConfig.INSTANCE.enabled) { return; }
+        args.set(0, glintColorizer$getModifiedScale(args.get(0)));
+        args.set(1, glintColorizer$getModifiedScale(args.get(1)));
+        args.set(2, glintColorizer$getModifiedScale(args.get(2)));
     }
 
     @ModifyArg(
@@ -49,7 +69,7 @@ public class RenderItemMixin_GlintCustomizer {
     )
     private float glintColorizer$modifySpeed(float speed) {
         if (!GlintConfig.INSTANCE.enabled) { return speed; }
-        return glintColorizer$getModifiedSpeed(speed); //todo: adw
+        return glintColorizer$getModifiedSpeed(speed);
     }
 
     @ModifyArg(
@@ -63,7 +83,7 @@ public class RenderItemMixin_GlintCustomizer {
     )
     private float glintColorizer$modifyRotation(float angle) {
         if (!GlintConfig.INSTANCE.enabled) { return angle; }
-        return glintColorizer$getModifiedRotation(angle, true); //todo: adw
+        return glintColorizer$getModifiedRotation(angle , true);
     }
 
     @ModifyArg(
@@ -77,7 +97,7 @@ public class RenderItemMixin_GlintCustomizer {
     )
     private float glintColorizer$modifyRotation2(float angle) {
         if (!GlintConfig.INSTANCE.enabled) { return angle; }
-        return glintColorizer$getModifiedRotation(angle, false); //todo: adw
+        return glintColorizer$getModifiedRotation(angle, false);
     }
 
     @ModifyArg(
@@ -136,80 +156,91 @@ public class RenderItemMixin_GlintCustomizer {
     }
 
     @Unique
-    private int glintColorizer$getColor(ColorSettings settings, boolean isFirstStroke) {
+    private int glintColorizer$getColor(GlintEffectOptions settings, boolean isFirstStroke) {
         return settings.getIndividualStrokes() ?
                 (isFirstStroke ? settings.getStrokeOneColor().getRGB() : settings.getStrokeTwoColor().getRGB()) :
                 settings.getGlintColor().getRGB();
     }
 
     @Unique
-    private float glintColorizer$getModifiedRotation(float color, boolean isFirstStroke) {
+    private float glintColorizer$getModifiedRotation(float defaultRot, boolean isFirstStroke) {
         if (RenderItemHook.INSTANCE.isRenderingHeld()) {
-            return isFirstStroke ? GlintConfig.INSTANCE.getHeldStrokeRotOne() : GlintConfig.INSTANCE.getHeldStrokeRotTwo();
+            return isFirstStroke ? GlintConfig.INSTANCE.getHeldItem().getStrokeRotOne() : GlintConfig.INSTANCE.getHeldItem().getStrokeRotTwo();
         }
 
-//        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
-//            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
-//                return glintColorizer$getPotionColor(RenderItemHook.INSTANCE.getItemStack());
-//            }
-//            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
-//                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ?
-//                        (isFirstStroke ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB()) :
-//                        GlintConfig.INSTANCE.getShinyColor().getRGB();
-//            }
-//            return GlintConfig.INSTANCE.getGuiIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getGuiColor().getRGB();
-//        }
-//
-//        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
-//            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getDroppedColor().getRGB();
-//        }
-//
-//        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
-//            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getFramedColor().getRGB();
-//        }
+        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
+            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return isFirstStroke ? GlintConfig.INSTANCE.getGuiItem().getStrokeRotOne() : GlintConfig.INSTANCE.getGuiItem().getStrokeRotTwo();
+            }
+            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return isFirstStroke ? GlintConfig.INSTANCE.getShinyPots().getStrokeRotOne() : GlintConfig.INSTANCE.getShinyPots().getStrokeRotTwo();
+            }
+            return isFirstStroke ? GlintConfig.INSTANCE.getGuiItem().getStrokeRotOne() : GlintConfig.INSTANCE.getGuiItem().getStrokeRotTwo();
+        }
 
-        return color;
+        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
+            return isFirstStroke ? GlintConfig.INSTANCE.getDroppedItem().getStrokeRotOne() : GlintConfig.INSTANCE.getDroppedItem().getStrokeRotTwo();
+        }
+
+        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
+            return isFirstStroke ? GlintConfig.INSTANCE.getFramedItem().getStrokeRotOne() : GlintConfig.INSTANCE.getFramedItem().getStrokeRotTwo();
+        }
+
+        return defaultRot;
     }
 
     @Unique
-    private float glintColorizer$getModifiedSpeed(float speed) {
+    private float glintColorizer$getModifiedSpeed(float defaultSpeed) {
         if (RenderItemHook.INSTANCE.isRenderingHeld()) {
-            return GlintConfig.INSTANCE.getHeldSpeed() * speed;
+            return GlintConfig.INSTANCE.getHeldItem().getSpeed() * defaultSpeed;
         }
 
-//        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
-//            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
-//                return glintColorizer$getPotionColor(RenderItemHook.INSTANCE.getItemStack());
-//            }
-//            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
-//                return GlintConfig.INSTANCE.getShinyIndividualStrokes() ?
-//                        (isFirstStroke ? GlintConfig.INSTANCE.getShinyStrokeOne().getRGB() : GlintConfig.INSTANCE.getShinyStrokeTwo().getRGB()) :
-//                        GlintConfig.INSTANCE.getShinyColor().getRGB();
-//            }
-//            return GlintConfig.INSTANCE.getGuiIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getGuiStrokeOne().getRGB() : GlintConfig.INSTANCE.getGuiStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getGuiColor().getRGB();
-//        }
-//
-//        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
-//            return GlintConfig.INSTANCE.getDroppedIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getDroppedStrokeOne().getRGB() : GlintConfig.INSTANCE.getDroppedStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getDroppedColor().getRGB();
-//        }
-//
-//        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
-//            return GlintConfig.INSTANCE.getFramedIndividualStrokes() ?
-//                    (isFirstStroke ? GlintConfig.INSTANCE.getFramedStrokeOne().getRGB() : GlintConfig.INSTANCE.getFramedStrokeTwo().getRGB()) :
-//                    GlintConfig.INSTANCE.getFramedColor().getRGB();
-//        }
+        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
+            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getGuiItem().getSpeed() * defaultSpeed;
+            }
+            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getShinyPots().getScale() * defaultSpeed;
+            }
+            return GlintConfig.INSTANCE.getGuiItem().getSpeed() * defaultSpeed;
+        }
 
-        return speed;
+        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
+            return GlintConfig.INSTANCE.getDroppedItem().getSpeed() * defaultSpeed;
+        }
+
+        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
+            return GlintConfig.INSTANCE.getFramedItem().getSpeed() * defaultSpeed;
+        }
+
+        return defaultSpeed;
+    }
+
+    @Unique
+    private float glintColorizer$getModifiedScale(float originalScale) {
+        if (RenderItemHook.INSTANCE.isRenderingHeld()) {
+            return GlintConfig.INSTANCE.getHeldItem().getScale() * originalScale;
+        }
+
+        if (RenderItemHook.INSTANCE.isRenderingInGUI()) {
+            if (GlintConfig.INSTANCE.getPotionBasedColor() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getGuiItem().getScale() * originalScale;
+            }
+            if (GlintConfig.INSTANCE.getPotionGlintBackground() && RenderItemHook.INSTANCE.isPotionItem()) {
+                return GlintConfig.INSTANCE.getShinyPots().getScale() * originalScale;
+            }
+            return GlintConfig.INSTANCE.getGuiItem().getScale() * originalScale;
+        }
+
+        if (RenderItemHook.INSTANCE.isRenderingDropped()) {
+            return GlintConfig.INSTANCE.getDroppedItem().getScale() * originalScale;
+        }
+
+        if (RenderItemHook.INSTANCE.isRenderingFramed()) {
+            return GlintConfig.INSTANCE.getFramedItem().getScale() * originalScale;
+        }
+
+        return originalScale;
     }
 
     @Unique
@@ -220,9 +251,9 @@ public class RenderItemMixin_GlintCustomizer {
                 (GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground());
     }
 
-        /**
-         * </><a href="https://github.com/RoccoDev/ShinyPots-1.8">Adapted from ShinyPots by RoccoDev under the LGPL-3.0 license.</a>
-         */
+    /**
+     * <a href="https://github.com/RoccoDev/ShinyPots-1.8">Adapted from ShinyPots by RoccoDev under the LGPL-3.0 license.</a>
+     */
     @Unique
     private int glintColorizer$getPotionColor(ItemStack item) {
         int potionId = item.getMetadata();

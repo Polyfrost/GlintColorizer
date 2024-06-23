@@ -6,8 +6,8 @@ import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.elements.BasicOption;
 import cc.polyfrost.oneconfig.config.elements.OptionPage;
 import cc.polyfrost.oneconfig.internal.config.annotations.Option;
-import org.polyfrost.glintcolorizer.config.ColorEntry;
-import org.polyfrost.glintcolorizer.config.ColorSettings;
+import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
+import org.polyfrost.glintcolorizer.config.annotation.ColorEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,21 +21,31 @@ import java.util.ArrayList;
 @Mixin(value = Config.class, remap = false)
 public class ConfigMixin {
 
-    @Unique
-    private transient OptionPage page;
-    @Unique
-    private transient Object instance;
+    @Unique private transient OptionPage glintColorizer$page;
+    @Unique private transient Object glintColorizer$instance;
 
-    @Inject(method = "generateOptionList(Ljava/lang/Object;Ljava/lang/Class;Lcc/polyfrost/oneconfig/config/elements/OptionPage;Lcc/polyfrost/oneconfig/config/data/Mod;Z)V", at = @At("HEAD"))
+    @Inject(
+            method = "generateOptionList(Ljava/lang/Object;Ljava/lang/Class;Lcc/polyfrost/oneconfig/config/elements/OptionPage;Lcc/polyfrost/oneconfig/config/data/Mod;Z)V",
+            at = @At(
+                    value = "HEAD"
+            )
+    )
     private void capture(Object instance, Class<?> targetClass, OptionPage page, Mod mod, boolean migrate, CallbackInfo ci) {
-        this.instance = instance;
-        this.page = page;
+        this.glintColorizer$instance = instance;
+        this.glintColorizer$page = page;
     }
 
-    @ModifyVariable(method = "generateOptionList(Ljava/lang/Object;Ljava/lang/Class;Lcc/polyfrost/oneconfig/config/elements/OptionPage;Lcc/polyfrost/oneconfig/config/data/Mod;Z)V", at = @At(value = "LOAD", ordinal = 0), name = "field")
+    @ModifyVariable(
+            method = "generateOptionList(Ljava/lang/Object;Ljava/lang/Class;Lcc/polyfrost/oneconfig/config/elements/OptionPage;Lcc/polyfrost/oneconfig/config/data/Mod;Z)V",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 0
+            ),
+            name = "field"
+    )
     private Field generate(Field field) {
         if (field.isAnnotationPresent(ColorEntry.class)) {
-            glintColorizer$addOptions(page, field, instance);
+            glintColorizer$addOptions(glintColorizer$page, field, glintColorizer$instance);
         }
         return field;
     }
@@ -43,7 +53,7 @@ public class ConfigMixin {
     @Unique
     private void glintColorizer$addOptions(OptionPage page, Field field, Object instance) {
         ColorEntry annotation = field.getAnnotation(ColorEntry.class);
-        ColorSettings colorSettings = (ColorSettings) ConfigUtils.getField(field, instance);
+        GlintEffectOptions colorSettings = (GlintEffectOptions) ConfigUtils.getField(field, instance);
         BasicOption strokeOne = null;
         BasicOption strokeTwo = null;
         BasicOption individualStrokes = null;
