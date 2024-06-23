@@ -7,7 +7,7 @@ import cc.polyfrost.oneconfig.config.core.OneColor
 class GlintEffectOptions {
 
     @Button(
-        name = "Reset Held Glint Colors",
+        name = "Reset Glint Colors",
         subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."

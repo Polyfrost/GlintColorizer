@@ -29,7 +29,7 @@ public class RenderItemMixin_GlintCustomizer {
     )
     private void glintColorizer$push(IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (!glintColorizer$shouldApplyMatrix()) { return; }
+        if (glintColorizer$shouldApplyMatrix()) { return; }
         GlStateManager.pushMatrix();
     }
 
@@ -245,10 +245,10 @@ public class RenderItemMixin_GlintCustomizer {
 
     @Unique
     private boolean glintColorizer$shouldApplyMatrix() {
-        return GlintConfig.INSTANCE.getPotionGlintSize() &&
-                RenderItemHook.INSTANCE.isRenderingInGUI() &&
-                RenderItemHook.INSTANCE.isPotionItem() &&
-                (GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground());
+        return !GlintConfig.INSTANCE.getPotionGlintSize() ||
+                !RenderItemHook.INSTANCE.isRenderingInGUI() ||
+                !RenderItemHook.INSTANCE.isPotionItem() ||
+                (!GlintConfig.INSTANCE.getPotionGlintForeground() && !GlintConfig.INSTANCE.getPotionGlintBackground());
     }
 
     /**

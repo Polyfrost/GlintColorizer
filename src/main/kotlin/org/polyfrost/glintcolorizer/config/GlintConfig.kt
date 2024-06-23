@@ -189,17 +189,17 @@ object GlintConfig : Config(
     )
     var potionGlintForeground = false
 
-    @ColorEntry(
-        category = "Shiny Pots"
-    )
-    var shinyPots = GlintEffectOptions()
-
     @Checkbox(
         name = "Custom Shiny Effect Color",
         category = "Shiny Pots",
         subcategory = "Color"
     )
     var potionGlintBackground = false
+
+    @ColorEntry(
+        category = "Shiny Pots"
+    )
+    var shinyPots = GlintEffectOptions()
 
     @Switch(
         name = "Potion Color Based Glint",
@@ -210,10 +210,6 @@ object GlintConfig : Config(
 
     init {
         initialize()
-
-//        addDependency("potionGlintType", "potionGlint")
-//        addDependency("strokeOne", "individualStrokes")
-//        addDependency("strokeTwo", "individualStrokes")
     }
 
 }
