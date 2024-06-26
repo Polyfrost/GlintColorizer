@@ -36,8 +36,6 @@ object GlintConfig : Config(
         framedItem.reset(true)
         shinyPots.reset(true)
         armorColor = OneColor(defaultColor)
-        save()
-        openGui()
     }
 
     @Button(
@@ -52,8 +50,6 @@ object GlintConfig : Config(
         droppedItem.reset2()
         framedItem.reset2()
         shinyPots.reset2()
-        save()
-        openGui()
     }
 
     @Button(
@@ -68,8 +64,6 @@ object GlintConfig : Config(
         potionGlintBackground = false
         potionBasedColor = false
         potionGlintForeground = false
-        save()
-        openGui()
     }
 
     @Color(
@@ -101,8 +95,6 @@ object GlintConfig : Config(
         droppedItem.individualStrokes = false
         framedItem.individualStrokes = false
         shinyPots.individualStrokes = false
-        save()
-        openGui()
     }
 
     @Button(
@@ -118,9 +110,6 @@ object GlintConfig : Config(
         droppedItem.glintColor = OneColor(oldGlintValue)
         framedItem.glintColor = OneColor(oldGlintValue)
         shinyPots.glintColor = OneColor(oldGlintValue)
-
-        save()
-        openGui()
     }
 
     /* Held Items */
@@ -157,8 +146,6 @@ object GlintConfig : Config(
     )
     var resetArmor = Runnable {
         armorColor = OneColor(defaultColor)
-        save()
-        openGui()
     }
 
     @Color(
