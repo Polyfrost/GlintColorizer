@@ -161,6 +161,14 @@ object GlintConfig : Config(
         openGui()
     }
 
+    @Switch(
+        name = "Disable Armor Glint",
+        category = "Armor",
+        subcategory = "Color",
+        description = "Disables the enchantment glint on armor."
+    )
+    var armorGlintToggle = false
+
     @Color(
         name = "Armor Glint Color",
         category = "Armor",
