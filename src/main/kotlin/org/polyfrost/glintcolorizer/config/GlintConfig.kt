@@ -1,45 +1,46 @@
 package org.polyfrost.glintcolorizer.config
 
-import cc.polyfrost.oneconfig.config.Config
-import cc.polyfrost.oneconfig.config.annotations.*
-import cc.polyfrost.oneconfig.config.core.OneColor
-import cc.polyfrost.oneconfig.config.data.Mod
-import cc.polyfrost.oneconfig.config.data.ModType
-import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
 import org.polyfrost.glintcolorizer.GlintColorizer
 import org.polyfrost.glintcolorizer.config.annotation.ColorEntry
-import cc.polyfrost.oneconfig.config.annotations.Color
-import java.io.File
+import org.polyfrost.oneconfig.api.config.v1.Config
+import org.polyfrost.oneconfig.api.config.v1.annotations.Button
+import org.polyfrost.oneconfig.api.config.v1.annotations.Checkbox
+import org.polyfrost.oneconfig.api.config.v1.annotations.Color
+import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
+import org.polyfrost.polyui.color.argb
 
-object GlintConfig : Config(
-    Mod(
-        GlintColorizer.NAME, ModType.UTIL_QOL, "/glintcolorizer_dark.svg", VigilanceMigrator(
-            File(File(File("./W-OVERFLOW"), GlintColorizer.NAME), GlintColorizer.ID + ".toml").path
-        )
-    ), GlintColorizer.ID + ".json"
-) {
+//
+//object GlintConfig : Config(
+//    Mod(
+//        GlintColorizer.NAME, ModType.UTIL_QOL, "/glintcolorizer_dark.svg", VigilanceMigrator(
+//            File(File(File("./W-OVERFLOW"), GlintColorizer.NAME), GlintColorizer.ID + ".toml").path
+//        )
+//    ), GlintColorizer.ID + ".json"
+//) {
 
-    @Exclude val defaultColor = -8372020
-    @Exclude var oldGlintValue = -10407781
+object GlintConfig : Config("${GlintColorizer.ID}.json", "/glintcolorizer_dark.svg", GlintColorizer.NAME, Category.QOL) {
+
+    const val DEFAULT_COLOR = -8372020
+    private var oldGlintValue = -10407781
 
     @Button(
-        name = "Reset ALL Colors Settings",
+        title = "Reset ALL Colors Settings",
         category = "Global",
         text = "Reset",
         description = "Resets ALL custom glint colors settings and defaults them back to the vanilla color."
     )
     var resetColors = Runnable {
-        globalColor = OneColor(defaultColor)
+        globalColor = argb(DEFAULT_COLOR)
         heldItem.reset(true)
         guiItem.reset(true)
         droppedItem.reset(true)
         framedItem.reset(true)
         shinyPots.reset(true)
-        armorColor = OneColor(defaultColor)
+        armorColor = argb(DEFAULT_COLOR)
     }
 
     @Button(
-        name = "Reset ALL Transformation Settings",
+        title = "Reset ALL Transformation Settings",
         category = "Global",
         text = "Reset",
         description = "Resets ALL custom glint colors settings and defaults them back to the vanilla color."
@@ -53,7 +54,7 @@ object GlintConfig : Config(
     }
 
     @Button(
-        name = "Reset ALL Shiny Pots Settings",
+        title = "Reset ALL Shiny Pots Settings",
         category = "Global",
         text = "Reset",
         description = "Resets ALL custom shiny pots settings."
@@ -67,15 +68,15 @@ object GlintConfig : Config(
     }
 
     @Color(
-        name = "Global Glint Color",
+        title = "Global Glint Color",
         category = "Global",
         subcategory = "Configuration",
         description = "Modifies the color of the enchantment glint."
     )
-    var globalColor = OneColor(defaultColor)
+    var globalColor = argb(DEFAULT_COLOR)
 
     @Button(
-        name = "Apply Global Glint Color",
+        title = "Apply Global Glint Color",
         category = "Global",
         subcategory = "Configuration",
         text = "Apply",
@@ -83,12 +84,14 @@ object GlintConfig : Config(
     )
     var applyColors = Runnable {
         /* Singular Colors */
-        heldItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
-        guiItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
-        droppedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
-        framedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
-        shinyPots.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
-        armorColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+        // TODO
+//        heldItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+//        guiItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+//        droppedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+//        framedItem.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+//        shinyPots.glintColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+//        armorColor = globalColor.clone().also { it.setChromaSpeed(globalColor.dataBit) }
+
         /* Stroke */
         heldItem.individualStrokes = false
         guiItem.individualStrokes = false
@@ -98,18 +101,18 @@ object GlintConfig : Config(
     }
 
     @Button(
-        name = "1.7 Glint Color",
+        title = "1.7 Glint Color",
         category = "Global",
         subcategory = "Configuration",
         text = "Apply",
         description = "Applies the 1.7 glint color to all transform types."
     )
     var oldGlint = Runnable {
-        heldItem.glintColor = OneColor(oldGlintValue)
+        heldItem.glintColor = argb(oldGlintValue)
         /* GUI Items' glint color are actually the default 1.8 glint color! */
-        droppedItem.glintColor = OneColor(oldGlintValue)
-        framedItem.glintColor = OneColor(oldGlintValue)
-        shinyPots.glintColor = OneColor(oldGlintValue)
+        droppedItem.glintColor = argb(oldGlintValue)
+        framedItem.glintColor = argb(oldGlintValue)
+        shinyPots.glintColor = argb(oldGlintValue)
     }
 
     /* Held Items */
@@ -138,18 +141,18 @@ object GlintConfig : Config(
 
     /* Armor */
     @Button(
-        name = "Reset Armor Glint",
+        title = "Reset Armor Glint",
         category = "Armor",
         subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
     )
     var resetArmor = Runnable {
-        armorColor = OneColor(defaultColor)
+        armorColor = argb(DEFAULT_COLOR)
     }
 
     @Switch(
-        name = "Disable Armor Glint",
+        title = "Disable Armor Glint",
         category = "Armor",
         subcategory = "Color",
         description = "Disables the enchantment glint on armor."
@@ -157,35 +160,35 @@ object GlintConfig : Config(
     var armorGlintToggle = false
 
     @Color(
-        name = "Armor Glint Color",
+        title = "Armor Glint Color",
         category = "Armor",
         subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
-    var armorColor = OneColor(defaultColor)
+    var armorColor = argb(DEFAULT_COLOR)
 
     /* Shiny Pots */
     @Switch(
-        name = "Shiny Potions",
+        title = "Shiny Potions",
         category = "Shiny Pots"
     )
     var potionGlint = false
 
     @Checkbox(
-        name = "Render Over Full Slot",
+        title = "Render Over Full Slot",
         category = "Shiny Pots"
     )
     var potionGlintSize = false
 
     @Checkbox(
-        name = "Render Shiny Effect Only",
+        title = "Render Shiny Effect Only",
         description = "Disables the enchantment glint on the potion and solely renders the shiny effect.",
         category = "Shiny Pots"
     )
     var potionGlintForeground = false
 
     @Checkbox(
-        name = "Custom Shiny Effect Color",
+        title = "Custom Shiny Effect Color",
         category = "Shiny Pots",
         subcategory = "Color"
     )
@@ -197,14 +200,10 @@ object GlintConfig : Config(
     var shinyPots = GlintEffectOptions()
 
     @Switch(
-        name = "Potion Color Based Glint",
+        title = "Potion Color Based Glint",
         category = "Shiny Pots",
         subcategory = "Color"
     )
     var potionBasedColor = false
-
-    init {
-        initialize()
-    }
 
 }

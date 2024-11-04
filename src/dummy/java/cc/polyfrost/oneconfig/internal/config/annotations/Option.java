@@ -1,4 +1,4 @@
-package cc.polyfrost.oneconfig.internal.config.annotations;
+package org.polyfrost.oneconfig.internal.config.annotations;
 
 public @interface Option {
 }

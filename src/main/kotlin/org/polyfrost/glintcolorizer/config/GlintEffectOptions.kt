@@ -1,13 +1,16 @@
 package org.polyfrost.glintcolorizer.config
 
-import cc.polyfrost.oneconfig.config.annotations.*
-import cc.polyfrost.oneconfig.config.core.ConfigUtils
-import cc.polyfrost.oneconfig.config.core.OneColor
+import org.polyfrost.oneconfig.api.config.v1.annotations.Button
+import org.polyfrost.oneconfig.api.config.v1.annotations.Color
+import org.polyfrost.oneconfig.api.config.v1.annotations.Slider
+import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
+import org.polyfrost.polyui.color.argb
+import org.polyfrost.utils.v1.dsl.openUI
 
 class GlintEffectOptions {
 
     @Button(
-        name = "Reset Glint Colors",
+        title = "Reset Glint Colors",
         subcategory = "Configuration",
         text = "Reset",
         description = "Resets ALL custom glint colors."
@@ -15,11 +18,11 @@ class GlintEffectOptions {
     var resetColor = Runnable {
         reset(false)
         GlintConfig.save()
-        GlintConfig.openGui()
+        GlintConfig.openUI()
     }
 
     @Button(
-        name = "Reset Transformations",
+        title = "Reset Transformations",
         category = "Held Item",
         subcategory = "Configuration",
         text = "Reset",
@@ -28,80 +31,81 @@ class GlintEffectOptions {
     var resetTransforms = Runnable {
         reset2()
         GlintConfig.save()
-        GlintConfig.openGui()
+        GlintConfig.openUI()
     }
 
     @Switch(
-        name = "Modify Strokes Individually",
+        title = "Modify Strokes Individually",
         subcategory = "Color"
     )
     var individualStrokes = false
 
     @Color(
-        name = "Glint Color",
+        title = "Glint Color",
         subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
-    var glintColor = OneColor(GlintConfig.defaultColor)
+    var glintColor = argb(GlintConfig.DEFAULT_COLOR)
 
     @Color(
-        name = "Stroke 1 Color",
+        title = "Stroke 1 Color",
         subcategory = "Color",
         description = "Modifies the first stroke of the enchantment glint effect."
     )
-    var strokeOneColor = OneColor(GlintConfig.defaultColor)
+    var strokeOneColor = argb(GlintConfig.DEFAULT_COLOR)
 
     @Color(
-        name = "Stroke 2 Color",
+        title = "Stroke 2 Color",
         subcategory = "Color",
         description = "Modifies the second stroke of the enchantment glint effect."
     )
-    var strokeTwoColor = OneColor(GlintConfig.defaultColor)
+    var strokeTwoColor = argb(GlintConfig.DEFAULT_COLOR)
 
     @Slider(
-        name = "Speed",
+        title = "Speed",
         subcategory = "Speed",
         min = 0.1F,
         max = 10.0F,
-        instant = true
+//        instant = true
     )
     var speed = 1.0F
 
     @Slider(
-        name = "Stroke 1 Rotation",
+        title = "Stroke 1 Rotation",
         subcategory = "Rotation",
         min = -180.0F,
         max = 180.0F,
-        instant = true
+//        instant = true
     )
     var strokeRotOne = -50.0F
 
     @Slider(
-        name = "Stroke 2 Rotation",
+        title = "Stroke 2 Rotation",
         subcategory = "Rotation",
         min = -180.0F,
         max = 180.0F,
-        instant = true
+//        instant = true
     )
     var strokeRotTwo = 10.0F
 
     @Slider(
-        name = "Scale",
+        title = "Scale",
         subcategory = "Scale",
         min = 0.0F,
         max = 8.0F,
-        instant = true
+//        instant = true
     )
     var scale = 1.0F
 
     fun reset(resetAll: Boolean) {
-        val target = GlintEffectOptions()
-        val newFields = ConfigUtils.getClassFields(target::class.java)
-        val fields = ConfigUtils.getClassFields(this::class.java)
-        for (i in 0 until fields.size) {
-            if (!resetAll && fields[i].type != OneColor::class.java) continue
-            fields[i].set(this, ConfigUtils.getField(newFields[i], target))
-        }
+        // TODO
+//        val target = GlintEffectOptions()
+//        val newFields = ConfigUtils.getClassFields(target::class.java)
+//        val fields = ConfigUtils.getClassFields(this::class.java)
+//        for (i in 0 until fields.size) {
+//            if (!resetAll && fields[i].type != OneColor::class.java) continue
+//            fields[i].set(this, ConfigUtils.getField(newFields[i], target))
+//        }
     }
 
     fun reset2() {

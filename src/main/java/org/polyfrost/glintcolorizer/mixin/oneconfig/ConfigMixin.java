@@ -1,11 +1,11 @@
 package org.polyfrost.glintcolorizer.mixin.oneconfig;
 
-import cc.polyfrost.oneconfig.config.Config;
-import cc.polyfrost.oneconfig.config.core.ConfigUtils;
-import cc.polyfrost.oneconfig.config.data.Mod;
-import cc.polyfrost.oneconfig.config.elements.BasicOption;
-import cc.polyfrost.oneconfig.config.elements.OptionPage;
-import cc.polyfrost.oneconfig.internal.config.annotations.Option;
+import org.polyfrost.oneconfig.config.Config;
+import org.polyfrost.oneconfig.config.core.ConfigUtils;
+import org.polyfrost.oneconfig.config.data.Mod;
+import org.polyfrost.oneconfig.config.elements.BasicOption;
+import org.polyfrost.oneconfig.config.elements.OptionPage;
+import org.polyfrost.oneconfig.internal.config.annotations.Option;
 import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
 import org.polyfrost.glintcolorizer.config.annotation.ColorEntry;
 import org.spongepowered.asm.mixin.Mixin;

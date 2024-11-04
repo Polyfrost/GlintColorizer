@@ -158,8 +158,8 @@ public class RenderItemMixin_GlintCustomizer {
     @Unique
     private int glintColorizer$getColor(GlintEffectOptions settings, boolean isFirstStroke) {
         return settings.getIndividualStrokes() ?
-                (isFirstStroke ? settings.getStrokeOneColor().getRGB() : settings.getStrokeTwoColor().getRGB()) :
-                settings.getGlintColor().getRGB();
+                (isFirstStroke ? settings.getStrokeOneColor().getRgba() : settings.getStrokeTwoColor().getRgba()) :
+                settings.getGlintColor().getRgba();
     }
 
     @Unique

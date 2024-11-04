@@ -1,11 +1,11 @@
 package org.polyfrost.glintcolorizer.mixin;
 
-import cc.polyfrost.oneconfig.utils.color.ColorUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import org.polyfrost.polyui.color.ColorUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,7 +40,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             )
     )
     private void glintColorizer$modifyArmorColor(Args args) {
-        int color = GlintConfig.INSTANCE.getArmorColor().getRGB();
+        int color = GlintConfig.INSTANCE.getArmorColor().getRgba();
         args.set(0, (float) ColorUtils.getRed(color) / 255);
         args.set(1, (float) ColorUtils.getGreen(color) / 255);
         args.set(2, (float) ColorUtils.getBlue(color) / 255);
