@@ -4,8 +4,8 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.Button
 import org.polyfrost.oneconfig.api.config.v1.annotations.Color
 import org.polyfrost.oneconfig.api.config.v1.annotations.Slider
 import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
+import org.polyfrost.oneconfig.utils.v1.dsl.openUI
 import org.polyfrost.polyui.color.argb
-import org.polyfrost.utils.v1.dsl.openUI
 
 class GlintEffectOptions {
 
