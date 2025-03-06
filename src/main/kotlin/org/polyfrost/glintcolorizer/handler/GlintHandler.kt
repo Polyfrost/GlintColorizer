@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.client.resources.model.IBakedModel
 import net.minecraft.util.ResourceLocation
 import org.polyfrost.glintcolorizer.config.GlintConfig
-import org.polyfrost.glintcolorizer.mixin.accessor.RenderItemAccessor
+import org.polyfrost.glintcolorizer.mixin.accessor.RenderModelAccessor
 
-fun renderEffect(renderItem : RenderItem, model : IBakedModel, textureManager : TextureManager, glintResource : ResourceLocation) {
+fun renderEffect(renderItem: RenderItem, model: IBakedModel, textureManager: TextureManager, glintResource: ResourceLocation) {
     GlStateManager.pushMatrix()
     GlStateManager.depthMask(false)
     GlStateManager.depthFunc(514)
@@ -20,8 +20,8 @@ fun renderEffect(renderItem : RenderItem, model : IBakedModel, textureManager : 
     GlStateManager.blendFunc(768, 1)
     textureManager.bindTexture(glintResource)
     GlStateManager.matrixMode(5890)
-    glintStroke1(renderItem, model)
-    glintStroke2(renderItem, model)
+    renderGlintStroke1(renderItem, model)
+    renderGlintStroke2(renderItem, model)
     GlStateManager.matrixMode(5888)
     GlStateManager.blendFunc(770, 771)
     GlStateManager.enableLighting()
@@ -31,26 +31,30 @@ fun renderEffect(renderItem : RenderItem, model : IBakedModel, textureManager : 
     GlStateManager.popMatrix()
 }
 
-fun glintStroke1(renderItem : RenderItem, model : IBakedModel) {
+fun renderGlintStroke1(renderItem: RenderItem, model: IBakedModel) {
+    val options = GlintConfig.guiItemOptions
     GlStateManager.pushMatrix()
     GlStateManager.scale(8.0f, 8.0f, 8.0f)
     val f = (Minecraft.getSystemTime() % 3000L).toFloat() / 3000.0f / 8.0f
     GlStateManager.translate(f, 0.0f, 0.0f)
     GlStateManager.rotate(-50.0f, 0.0f, 0.0f, 1.0f)
-    (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeOneColor.rgba else GlintConfig.guiItem.glintColor.rgba
+    (renderItem as RenderModelAccessor).invokeRenderModel(
+        model,
+        if (options.individualStrokes) options.strokeOneColor.rgba else options.glintColor.rgba
     )
     GlStateManager.popMatrix()
 }
 
-fun glintStroke2(renderItem : RenderItem, model : IBakedModel) {
+fun renderGlintStroke2(renderItem: RenderItem, model: IBakedModel) {
+    val options = GlintConfig.guiItemOptions
     GlStateManager.pushMatrix()
     GlStateManager.scale(8.0f, 8.0f, 8.0f)
     val f1 = (Minecraft.getSystemTime() % 4873L).toFloat() / 4873.0f / 8.0f
     GlStateManager.translate(-f1, 0.0f, 0.0f)
     GlStateManager.rotate(10.0f, 0.0f, 0.0f, 1.0f)
-    (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeTwoColor.rgba else GlintConfig.guiItem.glintColor.rgba
+    (renderItem as RenderModelAccessor).invokeRenderModel(
+        model,
+        if (options.individualStrokes) options.strokeTwoColor.rgba else options.glintColor.rgba
     )
     GlStateManager.popMatrix()
 }
