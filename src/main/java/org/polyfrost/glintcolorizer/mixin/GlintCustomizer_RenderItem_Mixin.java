@@ -3,12 +3,9 @@ package org.polyfrost.glintcolorizer.mixin;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.potion.PotionHelper;
-import org.polyfrost.glintcolorizer.config.GlintConfig;
-import org.polyfrost.glintcolorizer.config.GlintOptions;
 import org.polyfrost.glintcolorizer.GlintMetadata;
+import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -64,30 +61,12 @@ public class GlintCustomizer_RenderItem_Mixin {
 
     @ModifyArg(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V", ordinal = 0), index = 1)
     private int modifyFirstStrokeColor(int color) {
-        return glc$getColor(color, true);
+        return GlintMetadata.getColor(color, true);
     }
 
     @ModifyArg(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V", ordinal = 1), index = 1)
     private int modifySecondStrokeColor(int color) {
-        return glc$getColor(color, false);
-    }
-
-    @Unique
-    private int glc$getColor(int color, boolean firstStroke) {
-        if (!GlintConfig.INSTANCE.enabled) {
-            return color;
-        }
-        GlintOptions options = GlintMetadata.getRenderingOptions();
-        if (options instanceof GlintOptions.ShinyPots) {
-            GlintOptions.ShinyPots potsOptions = (GlintOptions.ShinyPots) options;
-            if (potsOptions.usePotionBasedColor()) {
-                int potionId = GlintMetadata.getRenderingItemMetadata();
-                return PotionHelper.getLiquidColor(potionId, false) | 0xFF000000;
-            }
-        }
-        if (options.useIndividualStrokes()) {
-            return firstStroke ? options.getStrokeOneColor().getRgba() : options.getStrokeTwoColor().getRgba();
-        } else return options.getGlintColor().getRgba();
+        return GlintMetadata.getColor(color, false);
     }
 
 }

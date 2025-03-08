@@ -10,7 +10,7 @@ import org.polyfrost.oneconfig.utils.v1.dsl.openUI
     modid = GlintColorizer.ID,
     name = GlintColorizer.NAME,
     version = GlintColorizer.VER,
-    modLanguageAdapter = "org.polyfrost.oneconfig.utils.KotlinLanguageAdapter"
+    modLanguageAdapter = "org.polyfrost.oneconfig.utils.v1.forge.KotlinLanguageAdapter"
 )
 object GlintColorizer {
     const val NAME: String = "@MOD_NAME@"

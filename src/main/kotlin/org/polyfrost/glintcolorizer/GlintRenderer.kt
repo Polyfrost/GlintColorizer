@@ -1,6 +1,6 @@
 @file:JvmName("SecondGlintHandler")
 
-package org.polyfrost.glintcolorizer.handler
+package org.polyfrost.glintcolorizer
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager

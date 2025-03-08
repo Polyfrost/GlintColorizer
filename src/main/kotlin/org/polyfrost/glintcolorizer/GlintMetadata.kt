@@ -2,8 +2,10 @@ package org.polyfrost.glintcolorizer
 
 import net.minecraft.item.ItemPotion
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.PotionHelper
 import org.polyfrost.glintcolorizer.config.GlintConfig
 import org.polyfrost.glintcolorizer.config.GlintOptions
+import org.polyfrost.glintcolorizer.config.GlintOptions.ShinyPots
 
 object GlintMetadata {
     @JvmStatic
@@ -19,7 +21,19 @@ object GlintMetadata {
     }
 
     @JvmStatic
-    var renderingItemMetadata = 0
+    fun getColor(color: Int, firstStroke: Boolean): Int {
+        if (!GlintConfig.enabled) return color
+        val options = renderingOptions
+        if (options is ShinyPots && options.usePotionBasedColor) {
+            val potionId = renderingItemMetadata
+            return PotionHelper.getLiquidColor(potionId, false) or -0x1000000
+        }
+        return if (options.individualStrokes) {
+            if (firstStroke) options.strokeOneColor.rgba else options.strokeTwoColor.rgba
+        } else options.glintColor.rgba
+    }
+
+    private var renderingItemMetadata = 0
 
     @JvmStatic
     var renderMode = RenderMode.HELD
