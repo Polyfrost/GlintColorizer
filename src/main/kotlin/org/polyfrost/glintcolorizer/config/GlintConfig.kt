@@ -8,7 +8,7 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.Color
 import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 import org.polyfrost.polyui.color.argb
 
-object GlintConfig : Config("${GlintColorizer.ID}.toml", "/glintcolorizer_dark.svg", GlintColorizer.NAME, Category.QOL) {
+object GlintConfig : Config("${GlintColorizer.ID}.json", "/glintcolorizer_dark.svg", GlintColorizer.NAME, Category.QOL) {
     const val DEFAULT_GLINT_COLOR = -8372020
     const val OLD_GLINT_COLOR = -10407781
 
