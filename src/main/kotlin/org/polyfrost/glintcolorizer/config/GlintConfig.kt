@@ -27,7 +27,7 @@ object GlintConfig : Config("${GlintColorizer.ID}.json", "/glintcolorizer_dark.s
         text = "Apply",
         description = "Applies the 1.7 glint color to all transform types."
     )
-    private val oldGlint = Runnable {
+    fun applyOldGlint() {
         heldItemOptions.glintColor = argb(OLD_GLINT_COLOR)
         /* GUI Items' glint color are actually the default 1.8 glint color! */
         droppedItemOptions.glintColor = argb(OLD_GLINT_COLOR)

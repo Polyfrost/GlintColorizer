@@ -17,7 +17,7 @@ plugins {
 
 toolkitLoomHelper {
     useOneConfig {
-        version = "1.0.0-alpha.70"
+        version = "1.0.0-alpha.77"
         loaderVersion = "1.1.0-alpha.44"
 
         usePolyMixin = true
@@ -45,6 +45,8 @@ toolkitLoomHelper {
 }
 
 dependencies {
+    // TODO: temporary fix while dependency issues are fixed in OneConfig
+    modImplementation("dev.deftu:omnicore-${mcData.version}-${mcData.loader.name.lowercase()}:0.23.0")
     // Add Fabric Language Kotlin and (Legacy) Fabric API as dependencies (these are both optional but are particularly useful).
     if (mcData.isFabric) {
         if (mcData.isLegacyFabric) {
