@@ -89,7 +89,7 @@ public abstract class RenderItemMixin_ShinyEffect {
         if (RenderItemHook.INSTANCE.isPotionGlintEnabled() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
             return !GlintConfig.INSTANCE.getPotionGlintForeground() && !GlintConfig.INSTANCE.getPotionGlintBackground();
         }
-        return instance.hasEffect();
+        return instance.getItem() != null && instance.hasEffect();
     }
 
     @Inject(
