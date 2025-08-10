@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(RenderItem.class)
 public interface RenderModelAccessor {
-    @Invoker
-    void invokeRenderModel(IBakedModel model, int color);
+    @Invoker("renderModel") // NOTE: It is used, it just doesn't see kotlin
+    void glintcolorizer$renderModel(IBakedModel model, int color);
 }

@@ -8,7 +8,12 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.Color
 import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 import org.polyfrost.polyui.color.argb
 
-object GlintConfig : Config("${GlintColorizer.ID}.json", "/glintcolorizer_dark.svg", GlintColorizer.NAME, Category.QOL) {
+object GlintConfig : Config(
+    "${GlintColorizer.ID}.json",
+    "/assets/glintcolorizer/glintcolorizer_dark.svg",
+    GlintColorizer.NAME,
+    Category.QOL
+) {
     const val DEFAULT_GLINT_COLOR = -8372020
     const val OLD_GLINT_COLOR = -10407781
 
@@ -63,5 +68,4 @@ object GlintConfig : Config("${GlintColorizer.ID}.json", "/glintcolorizer_dark.s
 
     @Accordion(title = "Shiny Pots")
     var shinyPotsOptions = GlintOptions.ShinyPots()
-
 }

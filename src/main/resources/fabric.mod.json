@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${mod_version}",
+	"name": "${mod_name}",
+	"description": "${mod_description}",
+	"authors": [
+		"Polyfrost",
+		"lowercasebtw"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			{
+				"value": "org.polyfrost.glintcolorizer.GlintColorizer",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"mixins.${mod_id}.json"
+	],
+	"depends": {
+		"minecraft": "~${minor_mc_version}",
+		"fabricloader": ">=0.16.10"
+	}
+}

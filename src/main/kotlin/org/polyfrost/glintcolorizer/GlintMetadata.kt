@@ -12,25 +12,29 @@ object GlintMetadata {
     fun setupWithItem(renderingItem: ItemStack?) {
         if (renderingItem == null) {
             renderingItemMetadata = 0
-            return
-        }
-        renderingItemMetadata = renderingItem.metadata
-        if (renderingItem.item is ItemPotion && renderingItem.hasEffect() && GlintConfig.shinyPotsOptions.usePotionGlint) {
-            renderMode = RenderMode.SHINY
+        } else {
+            renderingItemMetadata = renderingItem.metadata
+            if (renderingItem.item is ItemPotion && renderingItem.hasEffect() && GlintConfig.shinyPotsOptions.usePotionGlint) {
+                renderMode = RenderMode.SHINY
+            }
         }
     }
 
     @JvmStatic
-    fun getColor(color: Int, firstStroke: Boolean): Int {
-        if (!GlintConfig.enabled) return color
+    fun getColor(firstStroke: Boolean): Int {
         val options = renderingOptions
         if (options is ShinyPots && options.usePotionBasedColor) {
             val potionId = renderingItemMetadata
             return PotionHelper.getLiquidColor(potionId, false) or -0x1000000
         }
-        return if (options.individualStrokes) {
-            if (firstStroke) options.strokeOneColor.rgba else options.strokeTwoColor.rgba
-        } else options.glintColor.rgba
+        println("$renderMode")
+        return if (options.individualStrokes)
+            if (firstStroke)
+                options.strokeOneColor.argb
+            else
+                options.strokeTwoColor.argb
+        else
+            options.glintColor.argb
     }
 
     private var renderingItemMetadata = 0
@@ -45,14 +49,6 @@ object GlintMetadata {
             field = value
         }
 
-    enum class RenderMode {
-        HELD,
-        SHINY,
-        GUI,
-        DROPPED,
-        FRAMED;
-    }
-
     @JvmStatic
     val renderingOptions: GlintOptions
         get() = when (renderMode) {
@@ -63,4 +59,11 @@ object GlintMetadata {
             RenderMode.FRAMED -> GlintConfig.framedItemOptions
         }
 
+    enum class RenderMode {
+        HELD,
+        SHINY,
+        GUI,
+        DROPPED,
+        FRAMED
+    }
 }
