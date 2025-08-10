@@ -27,7 +27,6 @@ object GlintMetadata {
             val potionId = renderingItemMetadata
             return PotionHelper.getLiquidColor(potionId, false) or -0x1000000
         }
-        println("$renderMode")
         return if (options.individualStrokes)
             if (firstStroke)
                 options.strokeOneColor.argb

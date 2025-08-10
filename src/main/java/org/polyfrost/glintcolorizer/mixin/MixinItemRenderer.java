@@ -1,8 +1,8 @@
 package org.polyfrost.glintcolorizer.mixin;
 
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import org.polyfrost.glintcolorizer.GlintMetadata;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ItemRenderer.class, remap = false)
+@Mixin(value = RenderItem.class, remap = false)
 public class MixinItemRenderer {
-    @Inject(method = "renderItem", at = @At("HEAD"))
+    @Inject(method = "renderItemModelTransform", at = @At("HEAD"))
     @SuppressWarnings("deprecation")
-    private void glintcolorizer$captureCameraTransform(EntityLivingBase entityIn, ItemStack heldStack, ItemCameraTransforms.TransformType transform, CallbackInfo ci) {
+    private void glintcolorizer$captureCameraTransform(ItemStack stack, IBakedModel model, ItemCameraTransforms.TransformType cameraTransformType, CallbackInfo ci) {
         GlintMetadata.RenderMode renderMode;
-        switch (transform) {
+        switch (cameraTransformType) {
             case FIRST_PERSON:
             case THIRD_PERSON: {
                 renderMode = GlintMetadata.RenderMode.HELD;
@@ -40,5 +40,10 @@ public class MixinItemRenderer {
         }
 
         GlintMetadata.setRenderMode(renderMode);
+    }
+
+    @Inject(method = "renderItemIntoGUI", at = @At("HEAD"))
+    private void glintcolorizer$guiTransform(ItemStack stack, int x, int y, CallbackInfo ci) {
+        GlintMetadata.setRenderMode(GlintMetadata.RenderMode.GUI);
     }
 }

@@ -2,16 +2,11 @@
 
 package org.polyfrost.glintcolorizer
 
-import dev.deftu.omnicore.client.render.pipeline.DrawModes
-import dev.deftu.omnicore.client.render.pipeline.OmniRenderPipeline
-import dev.deftu.omnicore.client.render.state.*
-import dev.deftu.omnicore.common.OmniIdentifier
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.entity.RenderItem
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.texture.TextureMap
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.resources.model.IBakedModel
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
@@ -24,18 +19,7 @@ fun renderEffect(
     textureManager: TextureManager,
     glintResource: ResourceLocation,
 ) {
-    val pipeline = OmniRenderPipeline.builderWithDefaultShader(
-        OmniIdentifier.create("minecraft:glint"),
-        DefaultVertexFormats.ITEM,
-        DrawModes.QUADS
-    ).apply {
-        depthState = OmniManagedDepthState(false, DepthFunction.EQUAL, false)
-        blendState = OmniManagedBlendState(true, BlendEquation.ADD, BlendFunction.of(SrcFactor.SRC_COLOR, DstFactor.ONE))
-        // TODO: disable lighting
-    }.build()
-
     GlStateManager.pushMatrix()
-
     GlStateManager.depthMask(false)
     GlStateManager.depthFunc(GL11.GL_EQUAL)
     GlStateManager.disableLighting()
@@ -50,7 +34,6 @@ fun renderEffect(
     GlStateManager.depthFunc(GL11.GL_LEQUAL)
     GlStateManager.depthMask(true)
     textureManager.bindTexture(TextureMap.locationBlocksTexture)
-
     GlStateManager.popMatrix()
 }
 
