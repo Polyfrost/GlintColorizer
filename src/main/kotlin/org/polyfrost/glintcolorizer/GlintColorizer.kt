@@ -49,7 +49,7 @@ object GlintColorizer
 //$$ override fun onInitializeClient() {
 //#endif
         GlintConfig
-        CommandManager.register(CommandManager.literal("assets/glintcolorizer").executes {
+        CommandManager.register(CommandManager.literal("glintcolorizer").executes {
             GlintConfig.openUI()
             Command.SINGLE_SUCCESS
         })
