@@ -1,5 +1,3 @@
-@file:JvmName("SecondGlintHandler")
-
 package org.polyfrost.glintcolorizer
 
 import net.minecraft.client.Minecraft

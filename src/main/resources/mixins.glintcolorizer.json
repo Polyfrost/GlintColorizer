@@ -1,14 +1,12 @@
 {
-  "compatibilityLevel": "JAVA_8",
-  "minVersion": "0.7",
-  "package": "org.polyfrost.glintcolorizer.mixin",
-  "refmap": "mixins.${mod_id}.refmap.json",
-  "mixins": [
-    "MixinItemRenderer",
-    "ArmorGlintCustomizer_LayerArmorBase_Mixin",
-    "GlintCustomizer_RenderItem_Mixin",
-    "ShinyEffect_RenderItem_Mixin",
-    "accessor.RenderModelAccessor"
-  ],
-  "verbose": true
+	"compatibilityLevel": "JAVA_8",
+	"minVersion": "0.7",
+	"package": "org.polyfrost.glintcolorizer.mixin",
+	"refmap": "mixins.${mod_id}.refmap.json",
+	"mixins": [
+		"MixinLayerArmorBase",
+		"MixinRenderItem",
+		"accessor.RenderModelAccessor"
+	],
+	"verbose": true
 }

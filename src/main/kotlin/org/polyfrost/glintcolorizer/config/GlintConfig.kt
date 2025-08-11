@@ -10,12 +10,24 @@ import org.polyfrost.polyui.color.argb
 
 object GlintConfig : Config(
     "${GlintColorizer.ID}.json",
-    "/assets/glintcolorizer/glintcolorizer_dark.svg",
+    "/assets/${GlintColorizer.ID}/glintcolorizer_dark.svg",
     GlintColorizer.NAME,
     Category.QOL
 ) {
     const val DEFAULT_GLINT_COLOR = -8372020
     const val OLD_GLINT_COLOR = -10407781
+
+    init {
+        hideIf("useCustomRenderer", "<1.17")
+    }
+
+    @Switch(
+        title = "Use Custom Renderer",
+        category = "Global",
+        subcategory = "Configuration",
+        description = "Replaces the vanilla glint renderer with a custom one to allow customizability."
+    )
+    var useCustomRenderer = true
 
     @Color(
         title = "Global Glint Color",

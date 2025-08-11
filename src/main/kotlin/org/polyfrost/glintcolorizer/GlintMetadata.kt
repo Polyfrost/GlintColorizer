@@ -8,35 +8,7 @@ import org.polyfrost.glintcolorizer.config.GlintOptions
 import org.polyfrost.glintcolorizer.config.GlintOptions.ShinyPots
 
 object GlintMetadata {
-    @JvmStatic
-    fun setupWithItem(renderingItem: ItemStack?) {
-        if (renderingItem == null) {
-            renderingItemMetadata = 0
-        } else {
-            renderingItemMetadata = renderingItem.metadata
-            if (renderingItem.item is ItemPotion && renderingItem.hasEffect() && GlintConfig.shinyPotsOptions.usePotionGlint) {
-                renderMode = RenderMode.SHINY
-            }
-        }
-    }
-
-    @JvmStatic
-    fun getColor(firstStroke: Boolean): Int {
-        val options = renderingOptions
-        if (options is ShinyPots && options.usePotionBasedColor) {
-            val potionId = renderingItemMetadata
-            return PotionHelper.getLiquidColor(potionId, false) or -0x1000000
-        }
-        return if (options.individualStrokes)
-            if (firstStroke)
-                options.strokeOneColor.argb
-            else
-                options.strokeTwoColor.argb
-        else
-            options.glintColor.argb
-    }
-
-    private var renderingItemMetadata = 0
+    private var renderingItemCached: ItemStack? = null
 
     @JvmStatic
     var renderMode = RenderMode.HELD
@@ -49,14 +21,47 @@ object GlintMetadata {
         }
 
     @JvmStatic
-    val renderingOptions: GlintOptions
-        get() = when (renderMode) {
+    fun getRenderingOptions(): GlintOptions {
+        return when (renderMode) {
             RenderMode.HELD -> GlintConfig.heldItemOptions
             RenderMode.SHINY -> GlintConfig.shinyPotsOptions
             RenderMode.GUI -> GlintConfig.guiItemOptions
             RenderMode.DROPPED -> GlintConfig.droppedItemOptions
             RenderMode.FRAMED -> GlintConfig.framedItemOptions
         }
+    }
+
+    @JvmStatic
+    fun setupWithItem(renderingItem: ItemStack?) {
+        if (renderingItem == null) {
+            renderingItemCached = null
+        } else {
+            renderingItemCached = renderingItem
+            if (renderingItem.item is ItemPotion && renderingItem.hasEffect() && GlintConfig.shinyPotsOptions.usePotionGlint) {
+                renderMode = RenderMode.SHINY
+            }
+        }
+    }
+
+    @JvmStatic
+    fun getColor(firstStroke: Boolean): Int {
+        val options = getRenderingOptions()
+        return if (options is ShinyPots && options.usePotionBasedColor && renderingItemCached != null) {
+            //#if MC > 1.8.9
+            //$$ net.minecraft.potion.PotionUtil.getColor(renderingItemCached!!) or -0x1000000
+            //#else
+            PotionHelper.getLiquidColor(renderingItemCached!!.metadata, false) or -0x1000000
+            //#endif
+        } else {
+            if (options.individualStrokes)
+                if (firstStroke)
+                    options.strokeOneColor.argb
+                else
+                    options.strokeTwoColor.argb
+            else
+                options.glintColor.argb
+        }
+    }
 
     enum class RenderMode {
         HELD,

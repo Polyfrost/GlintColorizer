@@ -12,17 +12,38 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = LayerArmorBase.class, priority = Integer.MIN_VALUE)
-public abstract class ArmorGlintCustomizer_LayerArmorBase_Mixin implements LayerRenderer<EntityLivingBase> {
-    @Inject(method = "renderGlint", at = @At("HEAD"), cancellable = true)
-    private void glintcolorizer$disableArmorGlint(CallbackInfo ci) {
+@Mixin(LayerArmorBase.class)
+public abstract class MixinLayerArmorBase implements LayerRenderer<EntityLivingBase> {
+    //#if MC < 1.13
+    @Inject(method =
+            //#if MC < 1.12.2
+            "renderGlint",
+            //#else
+            //$$ "method_12479",
+            //#endif
+            at = @At("HEAD"), cancellable = true)
+    private
+    //#if MC >= 1.12.2
+    //$$ static
+    //#endif
+    void glintcolorizer$disableArmorGlint(CallbackInfo ci) {
         if (GlintConfig.INSTANCE.enabled && GlintConfig.INSTANCE.isArmorGlintDisabled()) {
             ci.cancel();
         }
     }
 
-    @WrapOperation(method = "renderGlint", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V"))
-    private void glintcolorizer$modifyArmorGlintColor(float red, float green, float blue, float alpha, Operation<Void> original) {
+    @WrapOperation(method =
+            //#if MC < 1.12.2
+            "renderGlint",
+            //#else
+            //$$ "method_12479",
+            //#endif
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V"))
+    private
+        //#if MC >= 1.12.2
+        //$$ static
+        //#endif
+    void glintcolorizer$modifyArmorGlintColor(float red, float green, float blue, float alpha, Operation<Void> original) {
         if (GlintConfig.INSTANCE.enabled) {
             PolyColor color = GlintConfig.INSTANCE.getArmorColor();
             red = color.red() / 255F;
@@ -33,4 +54,5 @@ public abstract class ArmorGlintCustomizer_LayerArmorBase_Mixin implements Layer
 
         original.call(red, green, blue, alpha);
     }
+    //#endif
 }
