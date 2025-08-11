@@ -18,7 +18,13 @@ object GlintConfig : Config(
     const val OLD_GLINT_COLOR = -10407781
 
     init {
-        hideIf("useCustomRenderer", "<1.17")
+        hideIf("useCustomRenderer") {
+            //#if MC < 1.17
+            true
+            //#else
+            //$$ false
+            //#endif
+        }
     }
 
     @Switch(

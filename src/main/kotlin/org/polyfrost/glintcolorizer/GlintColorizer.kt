@@ -42,7 +42,7 @@ object GlintColorizer
     const val VER: String = "@MOD_VERSION@"
     const val ID: String = "@MOD_ID@"
 
-    //#if FORGE-LIKE
+//#if FORGE-LIKE
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent?) {
 //#elseif FABRIC
