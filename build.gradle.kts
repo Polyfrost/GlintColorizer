@@ -17,18 +17,18 @@ plugins {
 
 toolkitLoomHelper {
     useOneConfig {
-        version = "1.0.0-alpha.123"
-        loaderVersion = "1.1.0-alpha.48"
-
+        version = "1.0.0-alpha.158"
+        loaderVersion = "1.1.0-alpha.49"
         usePolyMixin = true
         polyMixinVersion = "0.8.4+build.6"
-
         applyLoaderTweaker = true
-
         for (module in arrayOf("commands", "config", "config-impl", "events", "internal", "ui", "utils")) {
             +module
         }
     }
+
+    useDevAuth("1.2.1")
+    useMixinExtras("0.5.0")
 
     // Turns off the server-side run configs, as we're building a client-sided mod.
     disableRunConfigs(GameSide.SERVER)

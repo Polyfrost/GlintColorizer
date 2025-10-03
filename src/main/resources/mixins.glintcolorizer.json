@@ -4,9 +4,9 @@
 	"package": "org.polyfrost.glintcolorizer.mixin",
 	"refmap": "mixins.${mod_id}.refmap.json",
 	"mixins": [
-		"MixinLayerArmorBase",
-		"MixinRenderItem",
-		"accessor.RenderModelAccessor"
+		"v1_12_2.MixinLayerArmorBase",
+		"v1_12_2.MixinRenderItem",
+		"v1_12_2.accessor.RenderModelAccessor"
 	],
 	"verbose": true
 }

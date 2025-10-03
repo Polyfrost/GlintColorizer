@@ -1,4 +1,4 @@
-package org.polyfrost.glintcolorizer.mixin.accessor;
+package org.polyfrost.glintcolorizer.mixin.v1_12_2.accessor;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;

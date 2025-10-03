@@ -8,10 +8,9 @@ import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.client.resources.model.IBakedModel
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
-import org.polyfrost.glintcolorizer.config.GlintConfig
-import org.polyfrost.glintcolorizer.mixin.accessor.RenderModelAccessor
+import org.polyfrost.glintcolorizer.mixin.v1_12_2.accessor.RenderModelAccessor
 
-fun renderEffect(
+fun renderGlint(
     renderItem: RenderItem,
     model: IBakedModel,
     textureManager: TextureManager,
@@ -35,8 +34,7 @@ fun renderEffect(
     GlStateManager.popMatrix()
 }
 
-fun renderGlintStroke1(renderItem: RenderItem, model: IBakedModel) {
-    val options = GlintConfig.guiItemOptions
+private fun renderGlintStroke1(renderItem: RenderItem, model: IBakedModel) {
     GlStateManager.pushMatrix()
     GlStateManager.scale(8.0f, 8.0f, 8.0f)
     val f = (Minecraft.getSystemTime() % 3000L).toFloat() / 3000.0f / 8.0f
@@ -44,16 +42,12 @@ fun renderGlintStroke1(renderItem: RenderItem, model: IBakedModel) {
     GlStateManager.rotate(-50.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderModelAccessor).`glintcolorizer$renderModel`(
         model,
-        if (options.individualStrokes)
-            options.strokeOneColor.rgba
-        else
-            options.glintColor.rgba
+        GlintMetadata.getGlintColor(GlintLayer.FIRST, false)
     )
     GlStateManager.popMatrix()
 }
 
-fun renderGlintStroke2(renderItem: RenderItem, model: IBakedModel) {
-    val options = GlintConfig.guiItemOptions
+private fun renderGlintStroke2(renderItem: RenderItem, model: IBakedModel) {
     GlStateManager.pushMatrix()
     GlStateManager.scale(8.0f, 8.0f, 8.0f)
     val f1 = (Minecraft.getSystemTime() % 4873L).toFloat() / 4873.0f / 8.0f
@@ -61,10 +55,7 @@ fun renderGlintStroke2(renderItem: RenderItem, model: IBakedModel) {
     GlStateManager.rotate(10.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderModelAccessor).`glintcolorizer$renderModel`(
         model,
-        if (options.individualStrokes)
-            options.strokeTwoColor.rgba
-        else
-            options.glintColor.rgba
+        GlintMetadata.getGlintColor(GlintLayer.SECOND, false)
     )
     GlStateManager.popMatrix()
 }

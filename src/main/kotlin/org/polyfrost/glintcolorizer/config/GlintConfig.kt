@@ -4,7 +4,6 @@ import org.polyfrost.glintcolorizer.GlintColorizer
 import org.polyfrost.oneconfig.api.config.v1.Config
 import org.polyfrost.oneconfig.api.config.v1.annotations.Accordion
 import org.polyfrost.oneconfig.api.config.v1.annotations.Button
-import org.polyfrost.oneconfig.api.config.v1.annotations.Color
 import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 import org.polyfrost.polyui.color.argb
 
@@ -17,16 +16,6 @@ object GlintConfig : Config(
     const val DEFAULT_GLINT_COLOR = -8372020
     const val OLD_GLINT_COLOR = -10407781
 
-    init {
-        hideIf("useCustomRenderer") {
-            //#if MC < 1.17
-            true
-            //#else
-            //$$ false
-            //#endif
-        }
-    }
-
     @Switch(
         title = "Use Custom Renderer",
         category = "Global",
@@ -34,14 +23,6 @@ object GlintConfig : Config(
         description = "Replaces the vanilla glint renderer with a custom one to allow customizability."
     )
     var useCustomRenderer = true
-
-    @Color(
-        title = "Global Glint Color",
-        category = "Global",
-        subcategory = "Configuration",
-        description = "Modifies the color of the enchantment glint."
-    )
-    var globalColor = argb(DEFAULT_GLINT_COLOR)
 
     @Button(
         title = "1.7 Glint Color",
@@ -51,6 +32,7 @@ object GlintConfig : Config(
         description = "Applies the 1.7 glint color to all transform types."
     )
     fun applyOldGlint() {
+        armorOptions.glintColor = argb(OLD_GLINT_COLOR)
         heldItemOptions.glintColor = argb(OLD_GLINT_COLOR)
         /* GUI Items' glint color are actually the default 1.8 glint color! */
         droppedItemOptions.glintColor = argb(OLD_GLINT_COLOR)
@@ -58,32 +40,33 @@ object GlintConfig : Config(
         shinyPotsOptions.glintColor = argb(OLD_GLINT_COLOR)
     }
 
-    @Switch(
-        title = "Disable Armor Glint",
-        subcategory = "Armor",
-        description = "Disables the enchantment glint on armor."
-    )
-    var isArmorGlintDisabled = false
-
-    @Color(
-        title = "Armor Glint Color",
-        subcategory = "Armor",
-        description = "Modifies the color of the enchantment glint."
-    )
-    var armorColor = argb(DEFAULT_GLINT_COLOR)
+    @Accordion(title = "Armor Glint")
+    var armorOptions = ArmorGlint()
 
     @Accordion(title = "Held Item Glint")
-    var heldItemOptions = GlintOptions()
+    var heldItemOptions = BaseGlint()
 
     @Accordion(title = "Gui Item Glint")
-    var guiItemOptions = GlintOptions()
-
-    @Accordion(title = "Dropped Item Glint")
-    var droppedItemOptions = GlintOptions()
+    var guiItemOptions = BaseGlint()
 
     @Accordion(title = "Framed Item Glint")
-    var framedItemOptions = GlintOptions()
+    var framedItemOptions = BaseGlint()
+
+    @Accordion(title = "Dropped Item Glint")
+    var droppedItemOptions = BaseGlint()
 
     @Accordion(title = "Shiny Pots")
-    var shinyPotsOptions = GlintOptions.ShinyPots()
+    var shinyPotsOptions = ShinyPots()
+
+    init {
+        hideIf("useCustomRenderer") {
+            //#if MC < 1.17
+            true
+            //#else
+            //$$false
+            //#endif
+        }
+        armorOptions.firstStrokeRotation = 0F
+        armorOptions.secondStrokeRotation = 60F
+    }
 }

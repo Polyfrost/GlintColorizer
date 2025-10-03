@@ -1,13 +1,21 @@
-package org.polyfrost.glintcolorizer.mixin;
+package org.polyfrost.glintcolorizer.mixin.v1_12_2;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.item.ItemStack;
+import org.polyfrost.glintcolorizer.GlintLayer;
 import org.polyfrost.glintcolorizer.GlintMetadata;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
+import org.polyfrost.glintcolorizer.config.ShinyPots;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
 public abstract class MixinRenderItem {
@@ -16,7 +24,7 @@ public abstract class MixinRenderItem {
     @ModifyArg(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V", ordinal = 0), index = 1)
     private int glintcolorizer$modify1stStrokeColor(int color) {
         if (GlintConfig.INSTANCE.enabled) {
-            return GlintMetadata.getColor(true);
+            return GlintMetadata.getGlintColor(GlintLayer.FIRST, false);
         } else {
             return color;
         }
@@ -34,7 +42,7 @@ public abstract class MixinRenderItem {
     @ModifyArg(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V", ordinal = 1), index = 1)
     private int glintcolorizer$modify2ndStrokeColor(int color) {
         if (GlintConfig.INSTANCE.enabled) {
-            return GlintMetadata.getColor(false);
+            return GlintMetadata.getGlintColor(GlintLayer.SECOND, false);
         } else {
             return color;
         }
@@ -71,28 +79,16 @@ public abstract class MixinRenderItem {
     }
 
     // Shiny Potions
-    // @Shadow
-    // protected abstract void renderEffect(IBakedModel model);
+    @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At("HEAD"))
+    private void glintcolorizer$setupRenderMetadata(ItemStack stack, IBakedModel model, CallbackInfo ci) {
+        GlintMetadata.setItemStack(stack);
+    }
 
-    // @Shadow
-    // @Final
-    // private TextureManager textureManager;
-
-    // @Accessor("RES_ITEM_GLINT")
-    // private @NotNull ResourceLocation getResItemGlint() {
-    //     throw new UnsupportedOperationException();
-    // }
-
-    // @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At("HEAD"))
-    // private void glintcolorizer$setupRenderMetadata(ItemStack stack, IBakedModel model, CallbackInfo ci) {
-    //     GlintMetadata.setupWithItem(stack);
-    // }
-
-    // @WrapWithCondition(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
-    // private boolean glintcolorizer$disableDepthFunction(int factor) {
-    //     // this is the normal code, which we execute if we aren't rendering a shiny potion
-    //     return GlintMetadata.getRenderMode() != GlintMetadata.RenderMode.SHINY;
-    // }
+    @WrapWithCondition(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"))
+    private boolean glintcolorizer$disableDepthFunction(int factor) {
+        // this is the normal code, which we execute if we aren't rendering a shiny potion
+        return GlintMetadata.getRenderMode() != GlintMetadata.RenderMode.SHINY;
+    }
 
     // @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;Lnet/minecraft/item/ItemStack;)V"))
     // private void glintcolorizer$onRenderItemFirstPass(ItemStack stack, IBakedModel model, CallbackInfo ci) {
@@ -114,25 +110,25 @@ public abstract class MixinRenderItem {
     //     }
     // }
 
-    // @WrapOperation(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;hasEffect()Z"))
-    // private boolean glintcolorizer$disableEnchantedEffect(ItemStack instance, Operation<Boolean> original) {
-    //     if (GlintMetadata.getRenderMode() == GlintMetadata.RenderMode.SHINY) {
-    //         GlintOptions.ShinyPots options = (GlintOptions.ShinyPots) GlintMetadata.getRenderingOptions();
-    //         return !options.getDisablePotionGlint() && !options.getUseCustomColor();
-    //     } else {
-    //         return original.call(instance);
-    //     }
-    // }
+    @WrapOperation(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;hasEffect()Z"))
+    private boolean glintcolorizer$disableEnchantedEffect(ItemStack instance, Operation<Boolean> original) {
+        if (GlintMetadata.getRenderMode() == GlintMetadata.RenderMode.SHINY) {
+            ShinyPots options = (ShinyPots) GlintMetadata.getRenderingOptions();
+            return !options.getEnabled() && !options.getUseCustomColor();
+        } else {
+            return original.call(instance);
+        }
+    }
 
-    // @Inject(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/TextureManager;bindTexture(Lnet/minecraft/util/ResourceLocation;)V", ordinal = 0))
-    // private void glintcolorizer$enableFullSlotSize(IBakedModel model, CallbackInfo ci) {
-    //     if (GlintMetadata.getRenderMode() == GlintMetadata.RenderMode.SHINY) {
-    //         GlintOptions.ShinyPots options = (GlintOptions.ShinyPots) GlintMetadata.getRenderingOptions();
-    //         if (options.getUseFullSlotShine()) {
-    //             GlStateManager.scale(1.25, 1.25, 1.25);
-    //             GlStateManager.translate(-0.1, -0.1, 0.0);
-    //         }
-    //     }
-    // }
+    @Inject(method = "renderEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/TextureManager;bindTexture(Lnet/minecraft/util/ResourceLocation;)V", ordinal = 0))
+    private void glintcolorizer$enableFullSlotSize(IBakedModel model, CallbackInfo ci) {
+        if (GlintMetadata.getRenderMode() == GlintMetadata.RenderMode.SHINY) {
+            ShinyPots options = (ShinyPots) GlintMetadata.getRenderingOptions();
+            if (options.getUseFullSlotShine()) {
+                GlStateManager.scale(1.25, 1.25, 1.25);
+                GlStateManager.translate(-0.1, -0.1, 0.0);
+            }
+        }
+    }
     //#endif
 }
