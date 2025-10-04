@@ -1,6 +1,6 @@
 package org.polyfrost.glintcolorizer.config
 
-import org.polyfrost.glintcolorizer.GlintColorizer
+import org.polyfrost.glintcolorizer.GlintColorizerConstants
 import org.polyfrost.oneconfig.api.config.v1.Config
 import org.polyfrost.oneconfig.api.config.v1.annotations.Accordion
 import org.polyfrost.oneconfig.api.config.v1.annotations.Button
@@ -8,9 +8,9 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 import org.polyfrost.polyui.color.argb
 
 object GlintConfig : Config(
-    "${GlintColorizer.ID}.json",
-    "/assets/${GlintColorizer.ID}/glintcolorizer_dark.svg",
-    GlintColorizer.NAME,
+    "${GlintColorizerConstants.ID}.json",
+    "/assets/${GlintColorizerConstants.ID}/glintcolorizer_dark.svg",
+    GlintColorizerConstants.NAME,
     Category.QOL
 ) {
     const val DEFAULT_GLINT_COLOR = -8372020
@@ -40,22 +40,22 @@ object GlintConfig : Config(
         shinyPotsOptions.glintColor = argb(OLD_GLINT_COLOR)
     }
 
-    @Accordion(title = "Armor Glint")
+    @Accordion(title = "Armor Glint", index = 0)
     var armorOptions = ArmorGlint()
 
-    @Accordion(title = "Held Item Glint")
+    @Accordion(title = "Held Item Glint", index = 1)
     var heldItemOptions = BaseGlint()
 
-    @Accordion(title = "Gui Item Glint")
+    @Accordion(title = "Gui Item Glint", index = 2)
     var guiItemOptions = BaseGlint()
 
-    @Accordion(title = "Framed Item Glint")
+    @Accordion(title = "Framed Item Glint", index = 3)
     var framedItemOptions = BaseGlint()
 
-    @Accordion(title = "Dropped Item Glint")
+    @Accordion(title = "Dropped Item Glint", index = 4)
     var droppedItemOptions = BaseGlint()
 
-    @Accordion(title = "Shiny Pots")
+    @Accordion(title = "Shiny Pots", index = 5)
     var shinyPotsOptions = ShinyPots()
 
     init {

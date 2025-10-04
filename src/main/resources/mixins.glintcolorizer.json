@@ -3,10 +3,17 @@
 	"minVersion": "0.7",
 	"package": "org.polyfrost.glintcolorizer.mixin",
 	"refmap": "mixins.${mod_id}.refmap.json",
-	"mixins": [
+	"verbose": true,
+	"client": [
 		"v1_12_2.MixinLayerArmorBase",
 		"v1_12_2.MixinRenderItem",
-		"v1_12_2.accessor.RenderModelAccessor"
-	],
-	"verbose": true
+		"v1_21.MixinItem",
+		"v1_21.MixinItemModelResolver",
+		"v1_21.MixinItemRenderer",
+		"v1_21.MixinRenderBuffers",
+		"v1_21.MixinRenderType",
+		"v1_21.accessor.RenderPipelinesAccessor",
+		"v1_21.accessor.RenderTypeAccessor",
+		"v1_21.accessor.RenderTypeCompositeStateBuilderAccessor"
+	]
 }

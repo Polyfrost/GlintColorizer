@@ -1,6 +1,11 @@
 package org.polyfrost.glintcolorizer
 
+//#if MC >=1.21.4
+//$$ import net.minecraft.world.item.PotionItem as ItemPotion
+//#else
 import net.minecraft.item.ItemPotion
+//#endif
+
 import net.minecraft.item.ItemStack
 import org.polyfrost.glintcolorizer.config.BaseGlint
 import org.polyfrost.glintcolorizer.config.GlintConfig
@@ -10,7 +15,7 @@ object GlintMetadata {
         //#if MC <=1.12.2
         ItemStack(net.minecraft.init.Blocks.air)
         //#else
-        //$$ItemStack.EMPTY
+        //$$ ItemStack.EMPTY
         //#endif
 
     enum class RenderMode {
@@ -61,9 +66,10 @@ object GlintMetadata {
             options = GlintConfig.shinyPotsOptions
             if (options.usePotionBasedColor) {
                 //#if MC <=1.21.5
-                //$$
-                //#if MC <= 1.12.2
-                //$$return net.minecraft.potion.PotionUtil.getColor(renderingItemCached!!) or -0x1000000
+                //$$ // TODO
+                //$$ return 0
+                //#elseif MC <= 1.12.2
+                //$$ return net.minecraft.potion.PotionUtil.getColor(renderingItemCached!!) or -0x1000000
                 //#elseif MC <=1.8.9
                 return net.minecraft.potion.PotionHelper.getLiquidColor(
                     renderingItemCached.metadata,

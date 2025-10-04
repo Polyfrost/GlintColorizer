@@ -1,21 +1,24 @@
 package org.polyfrost.glintcolorizer.mixin.v1_12_2;
 
+import net.minecraft.client.renderer.entity.RenderItem;
+import org.spongepowered.asm.mixin.Mixin;
+
+//#if MC <= 1.12.2
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import org.polyfrost.glintcolorizer.GlintLayer;
 import org.polyfrost.glintcolorizer.GlintMetadata;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.config.ShinyPots;
-import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//#endif
 
 @Mixin(RenderItem.class)
 public abstract class MixinRenderItem {

@@ -1,16 +1,19 @@
 package org.polyfrost.glintcolorizer.mixin.v1_12_2;
 
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import org.spongepowered.asm.mixin.Mixin;
+
+//#if MC <= 1.12.2
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.deftu.omnicore.api.color.OmniColor;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import org.polyfrost.glintcolorizer.GlintLayer;
 import org.polyfrost.glintcolorizer.GlintMetadata;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//#endif
 
 @Mixin(LayerArmorBase.class)
 public abstract class MixinLayerArmorBase {
