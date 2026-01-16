@@ -1,27 +1,26 @@
 {
 	"schemaVersion": 1,
-	"id": "${mod_id}",
-	"version": "${mod_version}",
-	"name": "${mod_name}",
-	"description": "${mod_description}",
+	"id": "${id}",
+	"version": "${version}",
+	"name": "${name}",
+	"description": "${description}",
 	"authors": [
 		"Polyfrost",
 		"lowercasebtw"
 	],
-	"environment": "client",
-	"entrypoints": {
-		"client": [
-			{
-				"value": "org.polyfrost.glintcolorizer.GlintColorizer",
-				"adapter": "kotlin"
-			}
-		]
-	},
-	"mixins": [
-		"mixins.${mod_id}.json"
+	"contributors": [
 	],
+	"contact": {
+		"homepage": "${source}",
+		"sources": "${source}",
+		"issues": "${issues}"
+	},
+	"license": "${license}",
+	"icon": "assets/${id}/glintcolorizer_dark.svg",
+	"environment": "client",
 	"depends": {
-		"minecraft": "~${minor_mc_version}",
-		"fabricloader": ">=0.16.10"
+		"fabricloader": ">=${fabric_loader_version}",
+		"minecraft": "${minecraft_version_range}",
+		"fabric-api": "*"
 	}
 }

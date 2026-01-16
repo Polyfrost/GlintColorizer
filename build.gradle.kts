@@ -1,45 +1,172 @@
-@file:Suppress("UnstableApiUsage", "PropertyName")
-
-import dev.deftu.gradle.utils.GameSide
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java
-    kotlin("jvm")
-    id("dev.deftu.gradle.multiversion") // Applies preprocessing for multiple versions of Minecraft and/or multiple mod loaders.
-    id("dev.deftu.gradle.tools") // Applies several configurations to things such as the Java version, project name/version, etc.
-    id("dev.deftu.gradle.tools.resources") // Applies resource processing so that we can replace tokens, such as our mod name/version, in our resources.
-    id("dev.deftu.gradle.tools.bloom") // Applies the Bloom plugin, which allows us to replace tokens in our source files, such as being able to use `@MOD_VERSION` in our source files.
-    id("dev.deftu.gradle.tools.shadow") // Applies the Shadow plugin, which allows us to shade our dependencies into our mod JAR. This is NOT recommended for Fabric mods, but we have an *additional* configuration for those!
-    id("dev.deftu.gradle.tools.ducks") // Creates a ducks source set, which allows us to use theoretical classes which may not exist at runtime (such as things which are in other mods).
-    id("dev.deftu.gradle.tools.minecraft.loom") // Applies the Loom plugin, which automagically configures Essential's Architectury Loom plugin for you.
-    id("dev.deftu.gradle.tools.minecraft.releases") // Applies the Minecraft auto-releasing plugin, which allows you to automatically release your mod to CurseForge and Modrinth.
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.loom) // Required By Fabric
+    alias(libs.plugins.blossom) // Required for Token Replacements
+    alias(libs.plugins.ksp) // Required by Fletching Table
+    alias(libs.plugins.fletchingtable.fabric)
 }
 
-toolkitLoomHelper {
-    useOneConfig {
-        version = "1.0.0-alpha.158"
-        loaderVersion = "1.1.0-alpha.49"
-        usePolyMixin = true
-        polyMixinVersion = "0.8.4+build.6"
-        applyLoaderTweaker = true
-        for (module in arrayOf("commands", "config", "config-impl", "events", "internal", "ui", "utils")) {
-            +module
+class ModData {
+    val id = property("mod.id").toString()
+    val name = property("mod.name")
+    val version = property("mod.version")
+    val group = property("mod.group").toString()
+    val description = property("mod.description")
+    val source = property("mod.source")
+    val issues = property("mod.issues")
+    val license = property("mod.license") as String
+}
+
+class Dependencies {
+    val fabricLoaderVersion = property("deps.fabric_loader_version")
+    val fabricApiVersion = property("deps.fabric_api_version") as String?
+    val oneConfigVersion = property("deps.oneconfig_version")
+}
+
+class McData {
+    val version = property("mod.minecraft_version")
+    val versionRange = property("mod.minecraft_version_range") as String
+}
+
+val mc = McData()
+val mod = ModData()
+val deps = Dependencies()
+
+version = "${mod.version}+${mc.version}-fabric"
+group = mod.group
+base { archivesName.set(mod.id) }
+
+blossom {
+    replaceToken("@MODID@", mod.id)
+    replaceToken("@MOD_NAME@", mod.name)
+    replaceToken("@MOD_VERSION@", mod.version)
+}
+
+loom {
+    silentMojangMappingsLicense()
+
+    runConfigs.all {
+        ideConfigGenerated(stonecutter.current.isActive)
+        runDir = "../../run"
+    }
+
+    runConfigs.remove(runConfigs["server"]) // Removes server run configs
+}
+
+loom.runs {
+    afterEvaluate {
+        val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
+            componentFilter {
+                it is ModuleComponentIdentifier && it.group == "net.fabricmc" && it.module == "sponge-mixin"
+            }
+        }.files.first()
+
+        configureEach {
+            vmArg("-javaagent:$mixinJarFile")
+
+            property("mixin.hotSwap", "true")
+            property("mixin.debug.export", "true") // Puts mixin outputs in /run/.mixin.out
+        }
+    }
+}
+
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "${mod.id}.mixins.json")
+    }
+
+    lang.create("main") {
+        patterns.add("assets/${mod.id}/lang/**")
+    }
+}
+
+repositories {
+    maven("https://maven.parchmentmc.org") // Parchment
+    maven("https://repo.polyfrost.org/releases") // OmniCore
+    maven("https://repo.polyfrost.org/snapshots") // OmniCore
+    maven("https://api.modrinth.com/maven") // Modrinth
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${mc.version}")
+
+    @Suppress("UnstableApiUsage")
+    mappings(loom.layered {
+        // MojMap mappings
+        officialMojangMappings()
+
+        // Parchment mappings (it adds parameter mappings & javadoc)
+        optionalProp("deps.parchment_version") {
+            parchment("org.parchmentmc.data:parchment-${mc.version}:$it@zip")
+        }
+    })
+
+    modImplementation("net.fabricmc:fabric-loader:${deps.fabricLoaderVersion}")!!
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${deps.fabricApiVersion}")
+
+    val modules = listOf("${mc.version}-fabric", "commands", "config", "config-impl", "events", "internal", "ui", "utils", "hud")
+    for (module in modules) {
+        modImplementation("org.polyfrost.oneconfig:$module:${deps.oneConfigVersion}")
+    }
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks {
+    processResources {
+        val props = buildMap {
+            put("id", mod.id)
+            put("name", mod.name)
+            put("version", mod.version)
+            put("description", mod.description)
+            put("source", mod.source)
+            put("issues", mod.issues)
+            put("license", mod.license)
+            put("minecraft_version_range", mc.versionRange)
+            put("fabric_loader_version", deps.fabricLoaderVersion)
+        }
+
+        props.forEach(inputs::property)
+
+        filesMatching("**/lang/en_us.json") { // Defaults description to English translation
+            expand(props)
+            filteringCharset = "UTF-8"
+        }
+
+        filesMatching("fabric.mod.json") {
+            expand(props)
         }
     }
 
-    useDevAuth("1.2.1")
-    useMixinExtras("0.5.0")
-
-    // Turns off the server-side run configs, as we're building a client-sided mod.
-    disableRunConfigs(GameSide.SERVER)
-
-    // Defines the name of the Mixin refmap, which is used to map the Mixin classes to the obfuscated Minecraft classes.
-    if (!mcData.isNeoForge) {
-        useMixinRefMap(modData.id)
+    withType<JavaCompile>().configureEach {
+        options.release.set(21)
     }
 
-    if (mcData.isForge) {
-        // Configures the Mixin tweaker if we are building for Forge.
-        useForgeMixin(modData.id)
+    withType<KotlinCompile>().configureEach {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+    }
+
+    jar {
+        inputs.property("archivesName", base.archivesName)
+        from("LICENSE") {
+            rename { "${it}_${inputs.properties["archivesName"]}" }
+        }
     }
 }
+
+if (stonecutter.current.isActive) {
+    rootProject.tasks.register("buildActive") {
+        group = "project"
+        dependsOn(tasks.named("build"))
+    }
+}
+
+fun <T> optionalProp(property: String, block: (String) -> T?): T? =
+    findProperty(property)?.toString()?.takeUnless { it.isBlank() }?.let(block)

@@ -1,0 +1,27 @@
+{
+	"required": true,
+	"package": "org.polyfrost.glintcolorizer.mixins",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"MixinItem_ApplyPotionGlint",
+		"MixinItemRenderer_ApplyCustomRenderTypes",
+		"MixinRenderBuffers_RegisterRenderTypes",
+		"MixinRenderType_ApplyGlintColor",
+		"accessor.RenderPipelinesAccessor",
+		"accessor.RenderTypeAccessor",
+		"accessor.RenderTypeCompositeStateBuilderAccessor",
+		"v1_21_4.MixinItemModelResolver_StoreItemStack",
+		"v1_21_6.MixinGuiGraphics_StoreGlintState",
+		"v1_21_6.MixinGuiRenderer_ApplyGlintState",
+		"v1_21_6.MixinItemEntityRenderer_StoreGlintState",
+		"v1_21_6.MixinItemFrameRenderer_StoreGlintState",
+		"v1_21_6.MixinItemStackRenderState_StoreItemStack",
+		"v1_21_9.MixinEquipmentLayerRenderer_ApplyArmorGlint"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"mixinextras": {
+		"minVersion": "0.5.0"
+	}
+}
