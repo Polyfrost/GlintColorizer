@@ -1,5 +1,8 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
@@ -15,7 +18,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
@@ -35,17 +37,15 @@ public abstract class RenderItemMixin_ShinyEffect {
         RenderItemHook.INSTANCE.setItemStack(stack);
     }
 
-    @Redirect(
+    @WrapWithCondition(
             method = "renderEffect",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/GlStateManager;depthFunc(I)V"
             )
     )
-    private void glintColorizer$disableDepthFunc(int factor) {
-        if (RenderItemHook.INSTANCE.shouldSkipGlintRendering()) {
-            GlStateManager.depthFunc(factor);
-        }
+    private boolean glintColorizer$disableDepthFunc(int factor) {
+        return RenderItemHook.INSTANCE.shouldSkipGlintRendering();
     }
 
     @Inject(
@@ -78,18 +78,18 @@ public abstract class RenderItemMixin_ShinyEffect {
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/item/ItemStack;hasEffect()Z"
             )
     )
-    private boolean glintColorizer$disableRenderEffect(ItemStack instance) {
+    private boolean glintColorizer$disableRenderEffect(ItemStack instance, Operation<Boolean> original) {
         if (RenderItemHook.INSTANCE.isPotionGlintEnabled() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
             return !GlintConfig.INSTANCE.getPotionGlintForeground() && !GlintConfig.INSTANCE.getPotionGlintBackground();
         }
-        return instance.getItem() != null && instance.hasEffect();
+        return instance.getItem() != null && original.call(instance);
     }
 
     @Inject(

@@ -1,9 +1,9 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -52,15 +52,14 @@ public class RenderItemMixin_GlintCustomizer {
         args.set(2, glintColorizer$getModifiedScale(args.get(2)));
     }
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "renderEffect",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/Minecraft;getSystemTime()J"
             )
     )
-    private long glintColorizer$modifySpeed() {
-        long time = Minecraft.getSystemTime();
+    private long glintColorizer$modifySpeed(long time) {
         if (!GlintConfig.INSTANCE.getEnabled()) { return time; }
         GlintEffectOptions settings = RenderItemHook.INSTANCE.getActiveOptions();
         if (settings == null) { return time; }
