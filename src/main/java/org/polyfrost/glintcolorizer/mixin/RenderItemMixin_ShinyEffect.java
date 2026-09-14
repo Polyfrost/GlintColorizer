@@ -101,11 +101,9 @@ public abstract class RenderItemMixin_ShinyEffect {
             )
     )
     private void glintColorizer$fullSlotSize(IBakedModel model, CallbackInfo ci) {
-        if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (GlintConfig.INSTANCE.getPotionGlintSize() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
-            GlStateManager.scale(1.25, 1.25, 1.25);
-            GlStateManager.translate(-0.1, -0.1, 0.0);
-        }
+        if (!RenderItemHook.INSTANCE.getShouldRenderFullSlot()) { return; }
+        GlStateManager.scale(1.25, 1.25, 1.25);
+        GlStateManager.translate(-0.1, -0.1, 0.0);
     }
 
     @Unique

@@ -40,6 +40,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             )
     )
     private void glintColorizer$modifyArmorColor(Args args) {
+        if (!GlintConfig.INSTANCE.getEnabled()) { return; }
         PolyColor color = GlintConfig.INSTANCE.getArmorColor();
         args.set(0, color.getRedF());
         args.set(1, color.getGreenF());

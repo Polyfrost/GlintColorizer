@@ -1,20 +1,18 @@
 package org.polyfrost.glintcolorizer.config
 
-
 import org.polyfrost.compose.render.PolyColor
 import org.polyfrost.oneconfig.api.config.v1.Config
-import org.polyfrost.oneconfig.api.config.v1.annotations.Accordion
-import org.polyfrost.oneconfig.api.config.v1.annotations.Button
-import org.polyfrost.oneconfig.api.config.v1.annotations.Checkbox
-import org.polyfrost.oneconfig.api.config.v1.annotations.Color
-import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
-
+import org.polyfrost.oneconfig.api.config.v1.Properties
+import org.polyfrost.oneconfig.api.config.v1.Property
+import org.polyfrost.oneconfig.api.config.v1.Tree
+import org.polyfrost.oneconfig.api.config.v1.annotations.*
+import org.polyfrost.oneconfig.internal.ui.components.settings.bumpResetEpoch
 
 object GlintConfig : Config(
     "glintcolorizer.json", "/assets/glintcolorizer/glintcolorizer_dark.svg", "GlintColorizer", Category.VISUALS
 ) {
-    val defaultColor = -8372020
-    var oldGlintValue = -10407781
+    const val DEFAULT_COLOR = -8372020
+    const val OLD_GLINT_COLOR = -10407781
 
     @Switch(title = "Enabled")
     var enabled = true
@@ -31,6 +29,8 @@ object GlintConfig : Config(
         potionGlintBackground = false
         potionBasedColor = false
         potionGlintForeground = false
+        shinyPots.reset()
+        refreshOptions()
     }
 
     @Color(
@@ -39,7 +39,7 @@ object GlintConfig : Config(
         subcategory = "Configuration",
         description = "Modifies the color of the enchantment glint."
     )
-    var globalColor = PolyColor(defaultColor)
+    var globalColor = PolyColor(DEFAULT_COLOR)
 
     @Button(
         title = "Apply Global Glint Color",
@@ -49,27 +49,19 @@ object GlintConfig : Config(
         description = "Applies your global glint color. Resets ALL custom colors."
     )
     fun applyColors() {
-        /* Singular Colors */
-        
-        heldItem.glintColor.argb = globalColor.argb
-        heldItem.glintColor.chromaSpeed = globalColor.chromaSpeed
-        guiItem.glintColor.argb = globalColor.argb
-        guiItem.glintColor.chromaSpeed = globalColor.chromaSpeed
-        droppedItem.glintColor.argb = globalColor.argb
-        droppedItem.glintColor.chromaSpeed = globalColor.chromaSpeed
-        framedItem.glintColor.argb = globalColor.argb
-        framedItem.glintColor.chromaSpeed = globalColor.chromaSpeed
-        shinyPots.glintColor.argb = globalColor.argb
-        shinyPots.glintColor.chromaSpeed = globalColor.chromaSpeed
-        armorColor.argb = globalColor.argb
-        armorColor.chromaSpeed = globalColor.chromaSpeed
+        heldItem.glintColor.copyFrom(globalColor)
+        guiItem.glintColor.copyFrom(globalColor)
+        droppedItem.glintColor.copyFrom(globalColor)
+        framedItem.glintColor.copyFrom(globalColor)
+        shinyPots.glintColor.copyFrom(globalColor)
+        armorColor.copyFrom(globalColor)
 
-        /* Stroke */
         heldItem.individualStrokes = false
         guiItem.individualStrokes = false
         droppedItem.individualStrokes = false
         framedItem.individualStrokes = false
         shinyPots.individualStrokes = false
+        refreshOptions()
     }
 
     @Button(
@@ -80,32 +72,34 @@ object GlintConfig : Config(
         description = "Applies the 1.7 glint color to all transform types."
     )
     fun oldGlint() {
-        heldItem.glintColor.argb = oldGlintValue
-        /* GUI Items' glint color are actually the default 1.8 glint color! */
-        droppedItem.glintColor.argb = oldGlintValue
-        framedItem.glintColor.argb = oldGlintValue
-        shinyPots.glintColor.argb = oldGlintValue
+        heldItem.glintColor.argb = OLD_GLINT_COLOR
+        droppedItem.glintColor.argb = OLD_GLINT_COLOR
+        framedItem.glintColor.argb = OLD_GLINT_COLOR
+        shinyPots.glintColor.argb = OLD_GLINT_COLOR
+        refreshOptions()
     }
 
-    /* Held Items */
+    private fun PolyColor.copyFrom(other: PolyColor) {
+        argb = other.rawArgb
+        chroma = other.chroma
+        chromaSpeed = other.chromaSpeed
+    }
+
     @Accordion(
         category = "Held Item"
     )
     var heldItem = GlintEffectOptions()
 
-    /* Gui Items */
     @Accordion(
         category = "GUI Item"
     )
     var guiItem = GlintEffectOptions()
 
-    /* Dropped Items */
     @Accordion(
         category = "Dropped Item"
     )
     var droppedItem = GlintEffectOptions()
 
-    /* Framed Items */
     @Accordion(
         category = "Framed Item"
     )
@@ -125,9 +119,8 @@ object GlintConfig : Config(
         subcategory = "Color",
         description = "Modifies the color of the enchantment glint."
     )
-    var armorColor = PolyColor(defaultColor)
+    var armorColor = PolyColor(DEFAULT_COLOR)
 
-    /* Shiny Pots */
     @Switch(
         title = "Shiny Potions",
         category = "Shiny Pots"
@@ -165,4 +158,44 @@ object GlintConfig : Config(
         subcategory = "Color"
     )
     var potionBasedColor = false
+
+    private var rebound = false
+
+    override fun initialize(byConfigManager: Boolean) {
+        super.initialize(byConfigManager)
+        if (rebound) return
+        rebound = true
+        rebindAccordion("heldItem", heldItem)
+        rebindAccordion("guiItem", guiItem)
+        rebindAccordion("droppedItem", droppedItem)
+        rebindAccordion("framedItem", framedItem)
+        rebindAccordion("shinyPots", shinyPots)
+    }
+
+    private fun rebindAccordion(id: String, target: GlintEffectOptions) {
+        val subTree = getTree()?.get(id) as? Tree ?: return
+        for (field in GlintEffectOptions::class.java.declaredFields) {
+            if (field.isSynthetic) continue
+            if (subTree.get(field.name) !is Property<*>) continue
+            subTree.put(Properties.field<Any>(field = field, owner = target))
+        }
+    }
+
+    private fun refreshOptions() {
+        runCatching {
+            getTree()?.let { bumpAll(it) }
+        }.onFailure {
+            println("[GlintColorizer] could not refresh the config UI: $it")
+        }
+        save()
+    }
+
+    private fun bumpAll(tree: Tree) {
+        for (node in tree.map.values) {
+            when (node) {
+                is Property<*> -> bumpResetEpoch(node)
+                is Tree -> bumpAll(node)
+            }
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package org.polyfrost.glintcolorizer.command
 
-
 import org.polyfrost.glintcolorizer.GlintColorizer
 import org.polyfrost.glintcolorizer.config.GlintConfig
 import org.polyfrost.oneconfig.api.commands.v1.factories.annotated.Command
@@ -17,5 +16,4 @@ class GlintCommand {
     fun main() {
         GlintConfig.openUI()
     }
-
 }

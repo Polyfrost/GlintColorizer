@@ -17,6 +17,4 @@ publish.modrinth = "SevsTfWN"
 mod.mc_compat = "1.8.9"
 mod.mc_releases = ["1.8.9"]
 feather_build = 1
-deps.osl_core = "0.10.0+mc14w27a-mc1.14.4"
-deps.osl_entrypoints = "0.6.1+mc13w16a-mc1.14.4"
-deps.osl_lifecycle_events = "0.6.1+mc13w36a-mc19w07a"
+deps.osl = "0.21.0"

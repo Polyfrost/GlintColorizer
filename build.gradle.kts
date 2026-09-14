@@ -75,9 +75,7 @@ dependencies {
     minecraft("com.mojang:minecraft:$mcversion")
     if (isOrnithe) {
         mappings(ploceus!!.mcpMappings("stable", "1.8.9", "22"))
-        implementation("net.ornithemc.osl-gen2:core:${sc.properties["deps.osl_core"] as String}")
-        implementation("net.ornithemc.osl-gen2:entrypoints:${sc.properties["deps.osl_entrypoints"] as String}")
-        implementation("net.ornithemc.osl-gen2:lifecycle-events:${sc.properties["deps.osl_lifecycle_events"] as String}")
+        ploceus.dependOsl(sc.properties["deps.osl"])
     } else {
         loomx.applyMojangMappings()
     }

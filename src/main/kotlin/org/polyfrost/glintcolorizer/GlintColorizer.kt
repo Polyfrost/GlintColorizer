@@ -1,6 +1,5 @@
 package org.polyfrost.glintcolorizer
 
-
 import net.fabricmc.api.ClientModInitializer
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents
 
