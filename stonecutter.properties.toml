@@ -1,0 +1,22 @@
+mod.id = "glintcolorizer"
+mod.name = "GlintColorizer"
+mod.group = "org.polyfrost"
+mod.version = "3.0.0"
+mod.description = "Change the color of the enchantment glint!"
+license = "GPL-3.0-or-later"
+
+deps.fabric_loader = "0.19.3"
+deps.oneconfig = "1.1.15"
+deps.junit = "6.1.3"
+
+loomx.loom_version = "1.17-SNAPSHOT"
+
+publish.modrinth = "SevsTfWN"
+
+["1.8.9"]
+mod.mc_compat = "1.8.9"
+mod.mc_releases = ["1.8.9"]
+feather_build = 1
+deps.osl_core = "0.10.0+mc14w27a-mc1.14.4"
+deps.osl_entrypoints = "0.6.1+mc13w16a-mc1.14.4"
+deps.osl_lifecycle_events = "0.6.1+mc13w36a-mc19w07a"

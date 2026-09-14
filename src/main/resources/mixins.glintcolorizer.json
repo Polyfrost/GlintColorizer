@@ -1,15 +1,16 @@
 {
-  "compatibilityLevel": "JAVA_8",
-  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_25",
+  "minVersion": "0.8",
   "package": "org.polyfrost.glintcolorizer.mixin",
-  "refmap": "mixins.${id}.refmap.json",
   "mixins": [
-    "ForgeHooksClientMixin",
     "LayerArmorBaseMixin",
     "RenderItemMixin_GlintCustomizer",
     "RenderItemMixin_ShinyEffect",
-    "accessor.RenderItemAccessor",
-    "oneconfig.ConfigMixin"
+    "accessor.RenderItemAccessor"
   ],
-  "verbose": true
+  "verbose": true,
+  "client": [
+    "ItemEntityRendererMixin_HandleCameraTransforms",
+    "ItemRendererMixin_HandleCameraTransforms"
+  ]
 }

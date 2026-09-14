@@ -53,7 +53,7 @@ public class RenderItemMixin_GlintCustomizer {
             )
     )
     private void glintColorizer$modifyScale(Args args) {
-        if (!GlintConfig.INSTANCE.enabled) { return; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return; }
         args.set(0, glintColorizer$getModifiedScale(args.get(0)));
         args.set(1, glintColorizer$getModifiedScale(args.get(1)));
         args.set(2, glintColorizer$getModifiedScale(args.get(2)));
@@ -68,7 +68,7 @@ public class RenderItemMixin_GlintCustomizer {
             index = 0
     )
     private float glintColorizer$modifySpeed(float speed) {
-        if (!GlintConfig.INSTANCE.enabled) { return speed; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return speed; }
         return glintColorizer$getModifiedSpeed(speed);
     }
 
@@ -82,7 +82,7 @@ public class RenderItemMixin_GlintCustomizer {
             index = 0
     )
     private float glintColorizer$modifyRotation(float angle) {
-        if (!GlintConfig.INSTANCE.enabled) { return angle; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return angle; }
         return glintColorizer$getModifiedRotation(angle , true);
     }
 
@@ -96,7 +96,7 @@ public class RenderItemMixin_GlintCustomizer {
             index = 0
     )
     private float glintColorizer$modifyRotation2(float angle) {
-        if (!GlintConfig.INSTANCE.enabled) { return angle; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return angle; }
         return glintColorizer$getModifiedRotation(angle, false);
     }
 
@@ -110,7 +110,7 @@ public class RenderItemMixin_GlintCustomizer {
             index = 1
     )
     private int glintColorizer$modifyColor1(int color) {
-        if (!GlintConfig.INSTANCE.enabled) { return color; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return color; }
         return glintColorizer$getModifiedColor(color, true);
     }
 
@@ -124,7 +124,7 @@ public class RenderItemMixin_GlintCustomizer {
             index = 1
     )
     private int glintColorizer$modifyColor2(int color) {
-        if (!GlintConfig.INSTANCE.enabled) { return color; }
+        if (!GlintConfig.INSTANCE.getEnabled()) { return color; }
         return glintColorizer$getModifiedColor(color, false);
     }
 
@@ -158,8 +158,8 @@ public class RenderItemMixin_GlintCustomizer {
     @Unique
     private int glintColorizer$getColor(GlintEffectOptions settings, boolean isFirstStroke) {
         return settings.getIndividualStrokes() ?
-                (isFirstStroke ? settings.getStrokeOneColor().getRGB() : settings.getStrokeTwoColor().getRGB()) :
-                settings.getGlintColor().getRGB();
+                (isFirstStroke ? settings.getStrokeOneColor().getArgb() : settings.getStrokeTwoColor().getArgb()) :
+                settings.getGlintColor().getArgb();
     }
 
     @Unique

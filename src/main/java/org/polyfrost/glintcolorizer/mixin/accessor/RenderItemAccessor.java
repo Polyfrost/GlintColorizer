@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(RenderItem.class)
 public interface RenderItemAccessor {
-
-    @Invoker void invokeRenderModel(IBakedModel model, int color);
-
+    @Invoker("renderModel")
+    void invokeRenderModel(IBakedModel model, int color);
 }

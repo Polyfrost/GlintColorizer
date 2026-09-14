@@ -1,4 +1,4 @@
-<img align="right" src="src/main/resources/glintcolorizer_dark.svg" alt="GlintColorizer Icon"/>
+<img align="right" src="src/main/resources/assets/glintcolorizer/glintcolorizer_dark.svg" alt="GlintColorizer Icon"/>
 
 # GlintColorizer
 

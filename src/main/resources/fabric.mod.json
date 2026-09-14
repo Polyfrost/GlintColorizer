@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "Polyfrost"
+  ],
+  "icon": "assets/glintcolorizer/glintcolorizer_dark.svg",
+  "contact": {
+    "issues": "https://github.com/Polyfrost/${mod_name}/issues",
+    "sources": "https://github.com/Polyfrost/${mod_name}"
+  },
+  "license": "${license}",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "org.polyfrost.glintcolorizer.GlintColorizer"
+      }
+    ]
+  },
+  "mixins": [
+    "mixins.${mod_id}.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version_range}",
+    "oneconfigv1": ">=${oneconfig_version}",
+    "fabric-language-kotlin": "*"
+  }
+}

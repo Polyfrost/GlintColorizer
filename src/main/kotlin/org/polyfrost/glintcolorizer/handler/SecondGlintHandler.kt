@@ -38,7 +38,7 @@ fun glintStroke1(renderItem : RenderItem, model : IBakedModel) {
     GlStateManager.translate(f, 0.0f, 0.0f)
     GlStateManager.rotate(-50.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeOneColor.rgb else GlintConfig.guiItem.glintColor.rgb
+        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeOneColor.argb else GlintConfig.guiItem.glintColor.argb
     )
     GlStateManager.popMatrix()
 }
@@ -50,7 +50,7 @@ fun glintStroke2(renderItem : RenderItem, model : IBakedModel) {
     GlStateManager.translate(-f1, 0.0f, 0.0f)
     GlStateManager.rotate(10.0f, 0.0f, 0.0f, 1.0f)
     (renderItem as RenderItemAccessor).invokeRenderModel(model,
-        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeTwoColor.rgb else GlintConfig.guiItem.glintColor.rgb
+        if (GlintConfig.guiItem.individualStrokes) GlintConfig.guiItem.strokeTwoColor.argb else GlintConfig.guiItem.glintColor.argb
     )
     GlStateManager.popMatrix()
 }

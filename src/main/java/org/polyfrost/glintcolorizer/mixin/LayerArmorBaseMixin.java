@@ -1,9 +1,9 @@
 package org.polyfrost.glintcolorizer.mixin;
 
-import cc.polyfrost.oneconfig.utils.color.ColorUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
+import org.polyfrost.compose.render.PolyColor;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +27,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             cancellable = true
     )
     private void glintColorizer$disableGlint(EntityLivingBase entitylivingbaseIn, T modelbaseIn, float p_177183_3_, float p_177183_4_, float partialTicks, float p_177183_6_, float p_177183_7_, float p_177183_8_, float scale, CallbackInfo ci) {
-        if (GlintConfig.INSTANCE.getArmorGlintToggle() && GlintConfig.INSTANCE.enabled) {
+        if (GlintConfig.INSTANCE.getArmorGlintToggle() && GlintConfig.INSTANCE.getEnabled()) {
             ci.cancel();
         }
     }
@@ -40,10 +40,10 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             )
     )
     private void glintColorizer$modifyArmorColor(Args args) {
-        int color = GlintConfig.INSTANCE.getArmorColor().getRGB();
-        args.set(0, (float) ColorUtils.getRed(color) / 255);
-        args.set(1, (float) ColorUtils.getGreen(color) / 255);
-        args.set(2, (float) ColorUtils.getBlue(color) / 255);
+        PolyColor color = GlintConfig.INSTANCE.getArmorColor();
+        args.set(0, color.getRedF());
+        args.set(1, color.getGreenF());
+        args.set(2, color.getBlueF());
     }
 
 }
