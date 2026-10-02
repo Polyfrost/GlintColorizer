@@ -1,2 +1,3 @@
 ## 3.0.0
-- Port to 1.8.9
+- Ported to 1.8.9 Ornithe
+- Ported to OneConfig v1
