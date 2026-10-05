@@ -176,8 +176,9 @@ object GlintConfig : Config(
         val subTree = getTree()?.get(id) as? Tree ?: return
         for (field in GlintEffectOptions::class.java.declaredFields) {
             if (field.isSynthetic) continue
-            if (subTree.get(field.name) !is Property<*>) continue
-            subTree.put(Properties.field<Any>(field = field, owner = target))
+            val subTreeChild = subTree.get(field.name)
+            if (subTreeChild !is Property<*>) continue
+            subTree.put(Properties.field<Any>(name = subTreeChild.title as String?, description = subTreeChild.description as String?, field = field, owner = target))
         }
     }
 
