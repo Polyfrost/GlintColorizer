@@ -86,21 +86,25 @@ object GlintConfig : Config(
     }
 
     @Accordion(
+        title = "Held Item",
         category = "Held Item"
     )
     var heldItem = GlintEffectOptions()
 
     @Accordion(
+        title = "GUI Item",
         category = "GUI Item"
     )
     var guiItem = GlintEffectOptions()
 
     @Accordion(
+        title = "Dropped Item",
         category = "Dropped Item"
     )
     var droppedItem = GlintEffectOptions()
 
     @Accordion(
+        title = "Framed Item",
         category = "Framed Item"
     )
     var framedItem = GlintEffectOptions()
@@ -148,6 +152,7 @@ object GlintConfig : Config(
     var potionGlintBackground = false
 
     @Accordion(
+        title = "Shiny Pots",
         category = "Shiny Pots"
     )
     var shinyPots = GlintEffectOptions()
