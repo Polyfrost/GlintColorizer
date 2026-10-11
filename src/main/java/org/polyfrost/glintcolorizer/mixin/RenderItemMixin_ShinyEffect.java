@@ -27,6 +27,8 @@ public abstract class RenderItemMixin_ShinyEffect {
     @Shadow @Final private static ResourceLocation RES_ITEM_GLINT;
     @Shadow @Final private TextureManager textureManager;
 
+    @Unique private boolean glintColorizer$behindItem;
+
     @Inject(
             method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/resources/model/IBakedModel;)V",
             at = @At(
@@ -56,9 +58,43 @@ public abstract class RenderItemMixin_ShinyEffect {
             )
     )
     private void glintColorizer$onRenderModel(ItemStack stack, IBakedModel model, CallbackInfo ci) {
-        if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if ((GlintConfig.INSTANCE.getPotionGlintForeground() || GlintConfig.INSTANCE.getPotionGlintBackground()) && glintColorizer$isValidItem(stack)) {
-            renderEffect(model);
+        if (RenderItemHook.INSTANCE.isShinyEffectActive() && glintColorizer$isValidItem(stack)) {
+            glintColorizer$behindItem = true;
+            try {
+                renderEffect(model);
+            } finally {
+                glintColorizer$behindItem = false;
+            }
+        }
+    }
+
+    @WrapOperation(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/GlStateManager;blendFunc(II)V",
+                    ordinal = 0
+            )
+    )
+    private void glintColorizer$opaqueShinyEffect(int source, int destination, Operation<Void> original) {
+        if (glintColorizer$behindItem && GlintConfig.INSTANCE.getPotionGlintOpaque()) {
+            original.call(1, 0);
+        } else {
+            original.call(source, destination);
+        }
+    }
+
+    @Inject(
+            method = "renderEffect",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderModel(Lnet/minecraft/client/resources/model/IBakedModel;I)V",
+                    ordinal = 1
+            )
+    )
+    private void glintColorizer$additiveSecondStroke(IBakedModel model, CallbackInfo ci) {
+        if (glintColorizer$behindItem && GlintConfig.INSTANCE.getPotionGlintOpaque()) {
+            GlStateManager.blendFunc(768, 1);
         }
     }
 
@@ -86,9 +122,7 @@ public abstract class RenderItemMixin_ShinyEffect {
             )
     )
     private boolean glintColorizer$disableRenderEffect(ItemStack instance, Operation<Boolean> original) {
-        if (RenderItemHook.INSTANCE.isPotionGlintEnabled() && RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem()) {
-            return !GlintConfig.INSTANCE.getPotionGlintForeground() && !GlintConfig.INSTANCE.getPotionGlintBackground();
-        }
+        if (RenderItemHook.INSTANCE.isShinyEffectActive() && glintColorizer$isValidItem(instance)) { return false; }
         return instance.getItem() != null && original.call(instance);
     }
 
@@ -108,7 +142,7 @@ public abstract class RenderItemMixin_ShinyEffect {
 
     @Unique
     private boolean glintColorizer$isValidItem(ItemStack stack) {
-        return RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem() && stack.hasEffect();
+        return RenderItemHook.INSTANCE.isRenderingInGUI() && RenderItemHook.INSTANCE.isPotionItem();
     }
 
 }

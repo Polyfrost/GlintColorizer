@@ -1,6 +1,8 @@
 package org.polyfrost.glintcolorizer.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
@@ -10,32 +12,25 @@ import net.minecraft.client.resources.model.IBakedModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(RenderItem.class)
 public class RenderItemMixin_GlintCustomizer {
 
-    @Inject(
-            method = "renderEffect",
-            at = @At(
-                    value = "HEAD"
-            )
+    @WrapMethod(
+            method = "renderEffect"
     )
-    private void glintColorizer$push(IBakedModel model, CallbackInfo ci) {
-        if (!RenderItemHook.INSTANCE.getShouldRenderFullSlot()) { return; }
+    private void glintColorizer$isolateMatrix(IBakedModel model, Operation<Void> original) {
+        if (!RenderItemHook.INSTANCE.getShouldRenderFullSlot()) {
+            original.call(model);
+            return;
+        }
         GlStateManager.pushMatrix();
-    }
-
-    @Inject(
-            method = "renderEffect",
-            at = @At(
-                    value = "TAIL"
-            )
-    )
-    private void glintColorizer$pop(IBakedModel model, CallbackInfo ci) {
-        if (!RenderItemHook.INSTANCE.getShouldRenderFullSlot()) { return; }
-        GlStateManager.popMatrix();
+        try {
+            original.call(model);
+        } finally {
+            GlStateManager.popMatrix();
+        }
     }
 
     @ModifyArgs(

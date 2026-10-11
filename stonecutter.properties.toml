@@ -1,7 +1,7 @@
 mod.id = "glintcolorizer"
 mod.name = "GlintColorizer"
 mod.group = "org.polyfrost"
-mod.version = "3.0.0"
+mod.version = "3.0.1"
 mod.description = "Change the color of the enchantment glint!"
 license = "GPL-3.0-or-later"
 

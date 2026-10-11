@@ -29,7 +29,32 @@ object RenderItemHook {
         get() = GlintConfig.potionGlint && GlintConfig.enabled
 
     val isPotionItem: Boolean
-        get() = itemStack?.let { it.item is ItemPotion && it.hasEffect() } ?: false
+        get() = hasPotionEffects(itemStack)
+
+    fun hasPotionEffects(stack: ItemStack?): Boolean =
+        stack != null && (stack.item as? ItemPotion)?.getEffects(stack)?.isNotEmpty() == true
+
+    val isShinyEffectActive: Boolean
+        get() = isPotionGlintEnabled && (GlintConfig.potionGlintForeground || GlintConfig.potionGlintBackground)
+
+    fun drawsShinyEffect(stack: ItemStack): Boolean =
+        (isShinyEffectActive || isPotionGlintEnabled && GlintConfig.potionGlintSize || GlintConfig.enabled && GlintConfig.potionBasedColor) && hasPotionEffects(stack)
+
+    fun beginGuiBatch() {
+        transformType = ItemCameraTransforms.TransformType.GUI
+        itemStack = null
+    }
+
+    fun colorOr(fallback: Int, isFirstStroke: Boolean): Int {
+        if (!GlintConfig.enabled) return fallback
+        val color = glintColor(activeOptions ?: return fallback, isFirstStroke)
+        return if (color == GlintConfig.DEFAULT_COLOR) fallback else color
+    }
+
+    fun armorColorOr(fallback: Int): Int {
+        val color = GlintConfig.armorColor.argb
+        return if (!GlintConfig.enabled || color == GlintConfig.DEFAULT_COLOR) fallback else color
+    }
 
     val isRenderingHeld: Boolean
         get() = playerTransforms.contains(transformType)
@@ -66,12 +91,15 @@ object RenderItemHook {
         if (stack != null && isPotionColorBased) {
             return getPotionColor(stack)
         }
-        return if (settings.individualStrokes) {
+        return strokeColor(settings, isFirstStroke)
+    }
+
+    fun strokeColor(settings: GlintEffectOptions, isFirstStroke: Boolean): Int =
+        if (settings.individualStrokes) {
             if (isFirstStroke) settings.strokeOneColor.argb else settings.strokeTwoColor.argb
         } else {
             settings.glintColor.argb
         }
-    }
 
     /**
      * <a href="https://github.com/RoccoDev/ShinyPots-1.8">Adapted from ShinyPots by RoccoDev under the LGPL-3.0 license.</a>

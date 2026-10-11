@@ -29,6 +29,7 @@ object GlintConfig : Config(
         potionGlintBackground = false
         potionBasedColor = false
         potionGlintForeground = false
+        potionGlintOpaque = false
         shinyPots.reset()
         refreshOptions()
     }
@@ -127,6 +128,7 @@ object GlintConfig : Config(
 
     @Switch(
         title = "Shiny Potions",
+        description = "Warning: with Argentum installed, potions with effects are drawn outside its GUI item atlas, which may lower FPS in potion-heavy inventories.",
         category = "Shiny Pots"
     )
     var potionGlint = false
@@ -145,6 +147,13 @@ object GlintConfig : Config(
     var potionGlintForeground = false
 
     @Checkbox(
+        title = "Opaque Shiny Effect",
+        description = "Draws the shiny effect solid instead of adding it onto the slot, so the background cannot shift its color.",
+        category = "Shiny Pots"
+    )
+    var potionGlintOpaque = false
+
+    @Checkbox(
         title = "Custom Shiny Effect Color",
         category = "Shiny Pots",
         subcategory = "Color"
@@ -159,6 +168,7 @@ object GlintConfig : Config(
 
     @Switch(
         title = "Potion Color Based Glint",
+        description = "Warning: with Argentum installed, potions with effects are drawn outside its GUI item atlas, which may lower FPS in potion-heavy inventories.",
         category = "Shiny Pots",
         subcategory = "Color"
     )
