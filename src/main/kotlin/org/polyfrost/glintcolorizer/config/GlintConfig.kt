@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalOneConfigUiApi::class)
+
 package org.polyfrost.glintcolorizer.config
 
 import org.polyfrost.compose.render.PolyColor
@@ -6,7 +8,8 @@ import org.polyfrost.oneconfig.api.config.v1.Properties
 import org.polyfrost.oneconfig.api.config.v1.Property
 import org.polyfrost.oneconfig.api.config.v1.Tree
 import org.polyfrost.oneconfig.api.config.v1.annotations.*
-import org.polyfrost.oneconfig.internal.ui.components.settings.bumpResetEpoch
+import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
+import org.polyfrost.oneconfig.api.ui.v1.OptionWidgets
 
 object GlintConfig : Config(
     "glintcolorizer.json", "/assets/glintcolorizer/glintcolorizer_dark.svg", "GlintColorizer", Category.VISUALS
@@ -209,7 +212,7 @@ object GlintConfig : Config(
     private fun bumpAll(tree: Tree) {
         for (node in tree.map.values) {
             when (node) {
-                is Property<*> -> bumpResetEpoch(node)
+                is Property<*> -> OptionWidgets.refresh(node)
                 is Tree -> bumpAll(node)
             }
         }
