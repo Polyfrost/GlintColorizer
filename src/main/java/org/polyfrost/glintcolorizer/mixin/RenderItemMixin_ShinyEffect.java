@@ -108,7 +108,7 @@ public abstract class RenderItemMixin_ShinyEffect {
     )
     private void glintColorizer$onRenderModel2(ItemStack stack, IBakedModel model, CallbackInfo ci) {
         if (!RenderItemHook.INSTANCE.isPotionGlintEnabled()) { return; }
-        if (GlintConfig.INSTANCE.getPotionGlintBackground() && !GlintConfig.INSTANCE.getPotionGlintForeground() && glintColorizer$isValidItem(stack)) {
+        if (!GlintConfig.INSTANCE.getPotionGlintForeground() && glintColorizer$isValidItem(stack)) {
             RenderItem instance = (RenderItem) (Object) this;
             SecondGlintHandler.renderEffect(instance, model, textureManager, RES_ITEM_GLINT);
         }

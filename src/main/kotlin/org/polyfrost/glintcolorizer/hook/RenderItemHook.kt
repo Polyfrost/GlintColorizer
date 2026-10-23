@@ -35,10 +35,10 @@ object RenderItemHook {
         stack != null && (stack.item as? ItemPotion)?.getEffects(stack)?.isNotEmpty() == true
 
     val isShinyEffectActive: Boolean
-        get() = isPotionGlintEnabled && (GlintConfig.potionGlintForeground || GlintConfig.potionGlintBackground)
+        get() = isPotionGlintEnabled
 
     fun drawsShinyEffect(stack: ItemStack): Boolean =
-        (isShinyEffectActive || isPotionGlintEnabled && GlintConfig.potionGlintSize || GlintConfig.enabled && GlintConfig.potionBasedColor) && hasPotionEffects(stack)
+        (isShinyEffectActive || GlintConfig.enabled && GlintConfig.potionBasedColor) && hasPotionEffects(stack)
 
     fun beginGuiBatch() {
         transformType = ItemCameraTransforms.TransformType.GUI
