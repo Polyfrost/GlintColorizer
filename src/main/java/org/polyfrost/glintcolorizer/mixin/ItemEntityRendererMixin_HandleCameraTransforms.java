@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderEntityItem.class)
 public class ItemEntityRendererMixin_HandleCameraTransforms {
-    @Inject(method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms;applyTransform(Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V", ordinal = 0))
+    @Inject(method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms;applyTransform(Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V"))
     private void glintcolorizer$setCameraTransform(EntityItem itemEntity, double d, double e, double f, float g, float h, CallbackInfo ci) {
         RenderItemHook.INSTANCE.setTransformType(ItemCameraTransforms.TransformType.GROUND);
     }
