@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin.compat;
 
+//? if legacy {
+/*
 import net.minecraft.client.renderer.GlStateManager;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.config.GlintEffectOptions;
@@ -63,3 +65,4 @@ public class GuiItemGlintsMixin_Argentum {
     }
 
 }
+*///?}

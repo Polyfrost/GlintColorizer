@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+//? if legacy {
+/*
 
 
 
@@ -27,3 +29,4 @@ public class ItemRendererMixin_HandleCameraTransforms {
         RenderItemHook.INSTANCE.setTransformType(ItemCameraTransforms.TransformType.GUI);
     }
 }
+*///?}

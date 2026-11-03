@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin.compat;
 
+//? if legacy {
+/*
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
@@ -36,3 +38,4 @@ public class LegacyGlintMixin_OverflowAnimations {
     }
 
 }
+*///?}

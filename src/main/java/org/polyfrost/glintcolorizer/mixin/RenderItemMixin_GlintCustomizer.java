@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+//? if legacy {
+/*
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -139,3 +141,4 @@ public class RenderItemMixin_GlintCustomizer {
     }
 
 }
+*///?}

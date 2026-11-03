@@ -1,0 +1,48 @@
+classTweaker v1 official
+
+#? if >=1.21.1 && <1.21.5 {
+#accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+#accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+#accessible class net/minecraft/client/renderer/RenderType$CompositeState
+#accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$CullStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard
+#accessible field net/minecraft/client/renderer/RenderStateShard GLINT_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard EQUAL_DEPTH_TEST Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard LEQUAL_DEPTH_TEST Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard TRANSLUCENT_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard NO_CULL Lnet/minecraft/client/renderer/RenderStateShard$CullStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard COLOR_WRITE Lnet/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard;
+#accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
+#accessible field net/minecraft/client/renderer/RenderStateShard ITEM_ENTITY_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard MAIN_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+#?}
+
+#? if >=1.21.5 && <1.21.11 {
+#accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+#accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+#accessible class net/minecraft/client/renderer/RenderType$CompositeState
+#accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setTextureState (Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
+#accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder createCompositeState (Z)Lnet/minecraft/client/renderer/RenderType$CompositeState;
+#accessible class net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard
+#accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+#accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setOutputState (Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
+#accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
+#accessible field net/minecraft/client/renderer/RenderStateShard ITEM_ENTITY_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+#accessible field net/minecraft/client/renderer/RenderStateShard MAIN_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+#accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+#?}
+
+#? if >=1.21.11 && <26.3 {
+#accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+#accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+#?}
+
+#? if >=26.3 {
+accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;)Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;
+#?}

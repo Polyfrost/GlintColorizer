@@ -2,7 +2,11 @@ plugins {
     id("dev.kikugie.stonecutter")
 }
 
-stonecutter active "1.8.9" /* [SC] DO NOT EDIT */
+stonecutter active "26.3" /* [SC] DO NOT EDIT */
+
+stonecutter handlers {
+    inherit("aw", "classtweaker")
+}
 
 stonecutter {
     tasks {

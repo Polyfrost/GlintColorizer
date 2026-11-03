@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.hook
 
+//? if legacy {
+/*
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms
 import net.minecraft.init.Items
 import net.minecraft.item.ItemPotion
@@ -109,3 +111,4 @@ object RenderItemHook {
     }
 
 }
+*///?}

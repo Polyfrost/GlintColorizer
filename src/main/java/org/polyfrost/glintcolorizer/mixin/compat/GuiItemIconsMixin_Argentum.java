@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin.compat;
 
+//? if legacy {
+/*
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.item.ItemStack;
 import org.polyfrost.glintcolorizer.hook.RenderItemHook;
@@ -17,3 +19,4 @@ public class GuiItemIconsMixin_Argentum {
     }
 
 }
+*///?}

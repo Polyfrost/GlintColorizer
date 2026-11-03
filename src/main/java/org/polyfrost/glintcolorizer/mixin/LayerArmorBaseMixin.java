@@ -1,8 +1,10 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+//? if legacy {
+/*
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.entity.EntityLivingBase;
 import org.polyfrost.compose.render.PolyColor;
 import org.polyfrost.glintcolorizer.config.GlintConfig;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -48,3 +50,4 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
     }
 
 }
+*///?}

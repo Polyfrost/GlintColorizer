@@ -1,7 +1,8 @@
 package org.polyfrost.glintcolorizer
 
 import net.fabricmc.api.ClientModInitializer
-import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents
+//? if legacy
+//import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents
 
 import org.polyfrost.glintcolorizer.command.GlintCommand
 import org.polyfrost.glintcolorizer.config.GlintConfig
@@ -14,6 +15,9 @@ object GlintColorizer : ClientModInitializer {
 
     override fun onInitializeClient() {
         CommandManager.register(GlintCommand())
-        MinecraftClientEvents.READY.register() { context: Any -> GlintConfig.preload() }
+        //? if legacy {
+        //MinecraftClientEvents.READY.register() { context: Any -> GlintConfig.preload() }
+        //?} else
+        GlintConfig.preload()
     }
 }

@@ -21,11 +21,16 @@ Shiny Pots gives potions in your inventory a different look.
 
 ## Compatibility
 
-GlintColorizer works with Argentum's GUI rendering (Shiny Pots can cost some FPS there in potion-heavy inventories) and with the 1.7 and 1.15 glint styles from OverflowAnimations.
+GlintColorizer works with Argentum's GUI rendering (Shiny Pots can cost some FPS there in potion-heavy inventories) 
+and with the 1.7 and 1.15 glint styles from OverflowAnimations.
+
+On 1.21.4 and later, GlintColorizer's armor glint replaces the OverflowAnimations armor glint while GlintColorizer 
+is enabled.
 
 ## Supported versions
 
 - Minecraft 1.8.9 on Ornithe.
+- Minecraft 1.21.1 to 26.3 on Fabric. Shiny Pots works there too, including the full slot, shiny effect only and opaque effect options.
 
 GlintColorizer needs [OneConfig](https://modrinth.com/mod/oneconfig) and Fabric Language Kotlin.
 

@@ -22,8 +22,9 @@
       }
     ]
   },
+  "accessWidener": "${mod_id}.classtweaker",
   "mixins": [
-    "mixins.${mod_id}.json"
+    "${mixin_config}"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

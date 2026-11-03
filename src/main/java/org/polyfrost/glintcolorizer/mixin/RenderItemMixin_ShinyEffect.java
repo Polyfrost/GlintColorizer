@@ -1,5 +1,7 @@
 package org.polyfrost.glintcolorizer.mixin;
 
+//? if legacy {
+/*
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -146,3 +148,4 @@ public abstract class RenderItemMixin_ShinyEffect {
     }
 
 }
+*///?}

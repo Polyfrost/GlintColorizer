@@ -28,9 +28,9 @@ object GlintConfig : Config(
     )
     fun resetShinyPots() {
         potionGlint = false
-        potionGlintSize = false
         potionGlintBackground = false
         potionBasedColor = false
+        potionGlintSize = false
         potionGlintForeground = false
         potionGlintOpaque = false
         shinyPots.reset()
@@ -129,11 +129,19 @@ object GlintConfig : Config(
     )
     var armorColor = PolyColor(DEFAULT_COLOR)
 
-    @Switch(
+    //? if legacy {
+    /*@Switch(
         title = "Shiny Potions",
         description = "Warning: with Argentum installed, potions with effects are drawn outside its GUI item atlas, which may lower FPS in potion-heavy inventories.",
         category = "Shiny Pots"
     )
+    *///?} else {
+    @Switch(
+        title = "Shiny Potions",
+        description = "Gives potions with effects an enchantment glint and a shiny slot effect in your inventory.",
+        category = "Shiny Pots"
+    )
+    //?}
     var potionGlint = false
 
     @Checkbox(
@@ -169,12 +177,20 @@ object GlintConfig : Config(
     )
     var shinyPots = GlintEffectOptions()
 
-    @Switch(
+    //? if legacy {
+    /*@Switch(
         title = "Potion Color Based Glint",
         description = "Warning: with Argentum installed, potions with effects are drawn outside its GUI item atlas, which may lower FPS in potion-heavy inventories.",
         category = "Shiny Pots",
         subcategory = "Color"
     )
+    *///?} else {
+    @Switch(
+        title = "Potion Color Based Glint",
+        category = "Shiny Pots",
+        subcategory = "Color"
+    )
+    //?}
     var potionBasedColor = false
 
     private var rebound = false

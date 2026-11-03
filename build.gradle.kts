@@ -46,7 +46,11 @@ val loader = if (isOrnithe) "ornithe" else "fabric"
 version = "$modversion+$mcversion"
 base.archivesName = modid
 
-val requiredJava = JavaVersion.VERSION_25
+val requiredJava: JavaVersion = when {
+    sc.current.parsed >= "26.1" -> JavaVersion.VERSION_25
+    sc.current.parsed >= "1.20.5" -> JavaVersion.VERSION_21
+    else -> JavaVersion.VERSION_25
+}
 
 val compatibleVersions: List<String> = sc.properties.rawOrNull("mod", "mc_releases")
     ?.asList().orEmpty().map { it.toString() }
@@ -92,10 +96,7 @@ dependencies {
         implementation("org.polyfrost.oneconfig:$module:$oneconfigversion")
     }
 
-    if (!isOrnithe) {
-        val fapiversion: String = sc.properties["deps.fabric_api"]
-        modImplementation("net.fabricmc.fabric-api:fabric-api:$fapiversion")
-    }
+    sc.properties.rawOrNull("deps", "iris")?.let { modCompileOnly("maven.modrinth:iris:$it") }
 
     testImplementation("org.junit.jupiter:junit-jupiter:${sc.properties.getAs<String>("deps.junit")}")
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderversion")
@@ -118,10 +119,10 @@ tasks.named<Detekt>("detekt") {
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
-//    accessWidenerPath = sc.process(
-//        rootProject.file("src/main/resources/$modid.ct"),
-//        "build/processed.ct"
-//    )
+    accessWidenerPath = sc.process(
+        rootProject.file("src/main/resources/$modid.classtweaker"),
+        "build/processed.classtweaker"
+    )
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1")
@@ -169,6 +170,7 @@ bloom {
 tasks {
     test {
         useJUnitPlatform()
+        failOnNoDiscoveredTests = !isOrnithe
         testLogging {
             showStackTraces = true
             exceptionFormat = TestExceptionFormat.FULL
@@ -176,6 +178,8 @@ tasks {
     }
 
     processResources {
+        val mixinConfig = if (isOrnithe) "mixins.$modid.legacy.json" else "mixins.$modid.json"
+        exclude { it.name.startsWith("mixins.$modid") && it.name != mixinConfig }
         val props = mapOf(
             "mod_id" to modid,
             "mod_name" to modname,
@@ -184,12 +188,17 @@ tasks {
             "license" to license,
             "minecraft_version_range" to versionrange,
             "loader_version" to loaderversion,
-            "oneconfig_version" to oneconfigversion
+            "oneconfig_version" to oneconfigversion,
+            "mixin_config" to mixinConfig
         )
 
         inputs.properties(props)
 
         filesMatching("fabric.mod.json") { expand(props) }
+
+        val mixinJava = "JAVA_${requiredJava.majorVersion}"
+        inputs.property("mixinJava", mixinJava)
+        filesMatching("mixins.*.json") { expand("java" to mixinJava) }
     }
 
     jar {
@@ -245,7 +254,7 @@ publishMods {
 
     modLoaders.add(loader)
 
-    dryRun = modrinthId == null || modrinthToken == null || !isOrnithe
+    dryRun = modrinthId == null || modrinthToken == null
 
     if (modrinthId != null) {
         modrinth {

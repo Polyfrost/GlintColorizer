@@ -2,6 +2,8 @@
 
 package org.polyfrost.glintcolorizer.handler
 
+//? if legacy {
+/*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.entity.RenderItem
@@ -62,3 +64,4 @@ fun glintStroke2(renderItem : RenderItem, model : IBakedModel, settings : GlintE
 
 private fun scaledTime(settings : GlintEffectOptions) : Long =
     (Minecraft.getSystemTime() * settings.speed.toDouble()).toLong()
+*///?}

@@ -1,6 +1,8 @@
 
 package org.polyfrost.glintcolorizer.mixin;
 
+//? if legacy {
+/*
 
 
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -21,3 +23,4 @@ public class ItemEntityRendererMixin_HandleCameraTransforms {
         RenderItemHook.INSTANCE.setTransformType(ItemCameraTransforms.TransformType.GROUND);
     }
 }
+*///?}
