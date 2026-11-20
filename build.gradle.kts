@@ -88,9 +88,6 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:$loaderversion")
     modImplementation("org.polyfrost.oneconfig:$mcversion-$loader:$oneconfigversion")
-    for (module in arrayOf("commands", "config", "config-impl", "events", "internal", "ui", "utils", "hud")) {
-        implementation("org.polyfrost.oneconfig:$module:$oneconfigversion")
-    }
 
     if (!isOrnithe) {
         val fapiversion: String = sc.properties["deps.fabric_api"]
