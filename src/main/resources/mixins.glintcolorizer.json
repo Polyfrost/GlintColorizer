@@ -13,6 +13,7 @@
     "compat.GuiItemGlintsMixin_Argentum",
     "compat.GuiItemIconsMixin_Argentum",
     "compat.LegacyGlintMixin_OverflowAnimations",
+    "compat.McItemGlintMixin_PolyCompose",
     "ItemEntityRendererMixin_HandleCameraTransforms",
     "ItemRendererMixin_HandleCameraTransforms"
   ]
